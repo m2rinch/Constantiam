@@ -1,7 +1,10 @@
 <resources>
-    <string name="app_name">ConstantiumV1</string>
+    <string name="app_name">Constantiam</string>
     <string name="title_home">Home</string>
     <string name="title_dashboard">Dashboard</string>
     <string name="title_notifications">Notifications</string>
     <string name="default_time">00:10:00</string>
+    <string name="title_activity_feedback">FeedbackActivity</string>
+    <string name="set_button">Set</string>
+    <string name="session_button">Session</string>
 </resources>

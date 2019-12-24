@@ -47,6 +47,7 @@ public class TimerScreenActivity extends AppCompatActivity {
             timerStatus = TimerStatus.STARTED;
             // call to start the count down timer
             startCountDownTimer();
+            // def
 
         } else {
             // changing stop icon to start icon

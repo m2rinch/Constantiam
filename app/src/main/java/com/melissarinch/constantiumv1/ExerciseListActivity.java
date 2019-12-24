@@ -14,6 +14,7 @@ import static android.widget.Toast.LENGTH_SHORT;
 public class ExerciseListActivity extends AppCompatActivity {
 
     ListView exerciseList;
+    View overlay;
     String[] exerciseNames = {"Squat", "Lunge", "Glute Bridge", "Deadlift"};
     String[] exerciseDescriptions = {"lorem", "ipsum", "lorem", "ipsum"};
     private Integer[] exerciseImageID = {R.drawable.squat, R.drawable.lunge, R.drawable.glute_bridge, R.drawable.deadlift};
@@ -21,6 +22,8 @@ public class ExerciseListActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_exercise_list);
+        overlay = findViewById(R.id.overlay);
+        overlay.setVisibility(View.INVISIBLE);
 
         exerciseList = findViewById(R.id.exerciseList);
         CustomListView customListView = new CustomListView(this,exerciseNames, exerciseDescriptions, exerciseImageID);
@@ -28,8 +31,7 @@ public class ExerciseListActivity extends AppCompatActivity {
         exerciseList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Intent intent = new Intent(getApplicationContext(), TimerScreenActivity.class);
-                startActivity(intent);
+                overlay.setVisibility(View.VISIBLE);
             }
         });
     }
