@@ -36,6 +36,8 @@ import static com.microsoft.windowsazure.mobileservices.http.HttpConstants.GetMe
 
 public class ExerciseListActivity extends Activity {
 
+
+    private MobileServiceClient mClient;
     private MobileServiceTable<Exercise> mExerciseTable;
     private ExerciseItemAdapter mAdapter;
 
