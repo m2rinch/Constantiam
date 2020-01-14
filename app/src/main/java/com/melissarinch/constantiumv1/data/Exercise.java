@@ -2,16 +2,16 @@ package com.melissarinch.constantiumv1.data;
 
 public class Exercise {
 
-    @com.google.gson.annotations.SerializedName("exercise_name")
+    @com.google.gson.annotations.SerializedName("exercisename")
     private String mExerciseName;
 
     @com.google.gson.annotations.SerializedName("id")
     private String mId;
 
-    @com.google.gson.annotations.SerializedName("exercise_description")
+    @com.google.gson.annotations.SerializedName("exercisedescription")
     private String mExerciseDescription;
 
-    @com.google.gson.annotations.SerializedName("image_name")
+    @com.google.gson.annotations.SerializedName("imagename")
     private String mImageName;
 
     @Override

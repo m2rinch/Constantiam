@@ -1,20 +1,26 @@
 package com.melissarinch.constantiumv1;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.Toast;
 
+import com.google.common.util.concurrent.FutureCallback;
+import com.google.common.util.concurrent.Futures;
+import com.google.common.util.concurrent.ListenableFuture;
+import com.google.gson.JsonElement;
 import com.melissarinch.constantiumv1.data.Exercise;
 import com.microsoft.windowsazure.mobileservices.MobileServiceClient;
 import com.microsoft.windowsazure.mobileservices.http.OkHttpClientFactory;
 import com.microsoft.windowsazure.mobileservices.table.MobileServiceTable;
+import com.microsoft.windowsazure.mobileservices.table.query.QueryOrder;
 import com.microsoft.windowsazure.mobileservices.table.sync.MobileServiceSyncContext;
 import com.microsoft.windowsazure.mobileservices.table.sync.localstore.ColumnDataType;
 import com.microsoft.windowsazure.mobileservices.table.sync.localstore.MobileServiceLocalStoreException;
@@ -22,28 +28,20 @@ import com.microsoft.windowsazure.mobileservices.table.sync.localstore.SQLiteLoc
 import com.microsoft.windowsazure.mobileservices.table.sync.synchandler.SimpleSyncHandler;
 
 import java.net.MalformedURLException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeUnit;
+import static com.microsoft.windowsazure.mobileservices.http.HttpConstants.GetMethod;
 
-import okhttp3.OkHttpClient;
+public class ExerciseListActivity extends Activity {
 
-import static com.microsoft.windowsazure.mobileservices.table.query.QueryOperations.val;
-
-public class ExerciseListActivity extends AppCompatActivity {
-
-
-    private MobileServiceClient mClient;
     private MobileServiceTable<Exercise> mExerciseTable;
+    private ExerciseItemAdapter mAdapter;
 
     ListView exerciseList;
     View overlay;
-    String[] exerciseNames = {"Squat", "Lunge", "Glute Bridge", "Deadlift"};
-    String[] exerciseDescriptions = {"lorem", "ipsum", "lorem", "ipsum"};
-    private Integer[] exerciseImageID = {R.drawable.squat, R.drawable.lunge, R.drawable.glute_bridge, R.drawable.deadlift};
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,48 +49,59 @@ public class ExerciseListActivity extends AppCompatActivity {
         overlay = findViewById(R.id.overlay);
         overlay.setVisibility(View.INVISIBLE);
 
-        exerciseList = findViewById(R.id.exerciseList);
 
-        try {
-            // Create the client instance, using the provided mobile app URL.
-            mClient = new MobileServiceClient(
-                    "https://todolistapp123.azurewebsites.net",
-                    this);
 
-            // Extend timeout from default of 10s to 20s
-            mClient.setAndroidHttpClientFactory(new OkHttpClientFactory() {
-                @Override
-                public OkHttpClient createOkHttpClient() {
-                    OkHttpClient client = new OkHttpClient.Builder()
-                            .connectTimeout(20, TimeUnit.SECONDS)
-                            .readTimeout(20, TimeUnit.SECONDS)
-                            .build();
-
-                    return client;
-                }
-            });
-
-            mExerciseTable = mClient.getTable(Exercise.class);
-            initLocalStore().get();
-
-            // Create an adapter to bind the items with the view
-
-            CustomListView customListView = new CustomListView(this,exerciseNames, exerciseDescriptions, exerciseImageID);
-            exerciseList.setAdapter(customListView);
+//        try {
+//            // Create the client instance, using the provided mobile app URL.
+//            mClient = new MobileServiceClient(
+//                    "http://constantiam.azurewebsites.net/",
+//                    this);
+//
+//            // Extend timeout from default of 10s to 20s
+//            mClient.setAndroidHttpClientFactory(new OkHttpClientFactory() {
+//                @Override
+//                public OkHttpClient createOkHttpClient() {
+//                    OkHttpClient client = new OkHttpClient.Builder()
+//                            .connectTimeout(20, TimeUnit.SECONDS)
+//                            .readTimeout(20, TimeUnit.SECONDS)
+//                            .build();
+//
+//                    return client;
+//                }
+//            });
+//
+//            mExerciseTable = mClient.getTable(Exercise.class);
+//            initLocalStore().get();
+//
+//            Log.d("ExerciseListActivity", "HERE");
+//            // Create an adapter to bind the items with the view
+//
+            mAdapter = new ExerciseItemAdapter(this,R.layout.row_exercise_list);
+            exerciseList = findViewById(R.id.exerciseList);
+            exerciseList.setAdapter(mAdapter);
             exerciseList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                     overlay.setVisibility(View.VISIBLE);
                 }
             });
-            // Load the items from the mobile app backend.
-            //refreshItemsFromTable();
+            try{
+                getStringFromAzure();
+            }
+            catch (Exception e){
 
-        } catch (MalformedURLException e) {
-            createAndShowDialog(new Exception("There was an error creating the Mobile Service. Verify the URL"), "Error");
-        } catch (Exception e){
-            createAndShowDialog(e, "Error");
-        }
+                Log.d("Exercise List", "Execption: " + e.getMessage());
+            }
+
+//            // Load the items from the mobile app backend.
+//            Log.d("ExerciseListActivity", "HERE");
+//            refreshItemsFromTable();
+//
+//        } catch (MalformedURLException e) {
+//            createAndShowDialog(new Exception("There was an error creating the Mobile Service. Verify the URL"), "Error");
+//        } catch (Exception e){
+//            createAndShowDialog(e, "Error");
+//        }
     }
 
     private AsyncTask<Void, Void, Void> initLocalStore() throws MobileServiceLocalStoreException, ExecutionException, InterruptedException {
@@ -165,43 +174,79 @@ public class ExerciseListActivity extends AppCompatActivity {
         }
     }
 
-//    @SuppressLint("StaticFieldLeak")
-//    private void refreshItemsFromTable() {
-//
-//        // get all items from the table and add to adapter
-//
-//        AsyncTask<Void, Void, Void> task;
-//        task = new AsyncTask<Void, Void, Void>(){
-//            @Override
-//            protected Void doInBackground(Void... params) {
-//
-//                try {
-//                    // get the list of exercises
-//                    final List<Exercise> results = refreshItemsFromMobileServiceTable();
-//
-//                    runOnUiThread(new Runnable() {
-//                        @Override
-//                        public void run() {
-//                            CustomListView.clear();
-//
-//                            for (Exercise item : results) {
-//                                CustomListView.add(item);
-//                            }
-//                        }
-//                    });
-//                } catch (final Exception e){
-//                    createAndShowDialogFromTask(e, "Error");
-//                }
-//
-//                return null;
-//            }
-//        };
-//
-//        runAsyncTask(task);
-//    }
+    @SuppressLint("StaticFieldLeak")
+    private void refreshItemsFromTable() {
+
+        // get all items from the table and add to adapter
+
+        AsyncTask<Void, Void, Void> task;
+        task = new AsyncTask<Void, Void, Void>(){
+            @Override
+            protected Void doInBackground(Void... params) {
+
+                try {
+                    Log.d("ExerciseListActivity", "inside");
+                    // get the list of exercises
+                    final List<Exercise> results = refreshItemsFromMobileServiceTable();
+                    Log.d("ExerciseListActivity", "GOT HERE");
+                    Log.d("ExerciseListActivity", "RESULTS" + results.get(0).getText());
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            mAdapter.clear();
+
+                            for (Exercise item : results) {
+                                mAdapter.add(item);
+                            }
+                        }
+                    });
+                } catch (final Exception e){
+                    createAndShowDialogFromTask(e, "Error");
+                }
+
+                return null;
+            }
+        };
+
+        runAsyncTask(task);
+    }
 
     private List<Exercise> refreshItemsFromMobileServiceTable() throws ExecutionException, InterruptedException {
-        return mExerciseTable.execute("select * from exercise").get();
+        return mExerciseTable.orderBy("ID", QueryOrder.Ascending)
+                .execute()
+                .get();
+
+    }
+
+    private void getStringFromAzure() throws MalformedURLException {
+        String yourURL = "http://constantiam.azurewebsites.net/";
+        MobileServiceClient mClient = new MobileServiceClient(yourURL, this);
+
+        ListenableFuture<JsonElement> query = mClient.invokeApi("Exercises", null, GetMethod, null);
+
+        Futures.addCallback(query, new FutureCallback<JsonElement>() {
+            @Override
+            public void onSuccess(JsonElement jsonElement) {
+                // you are expecting a string, you can just output the result
+                final String result = jsonElement.toString();
+
+                //since you are on async task you need to show the result on the UI thread
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Toast.makeText(getApplicationContext(), result, Toast.LENGTH_LONG).show();
+                    }
+                });
+
+            }
+
+
+            @Override
+            public void onFailure(Throwable t) {
+                Log.d("Exercise List", "onFailure: " + t.getMessage());
+            }
+        });
+
     }
 
 }
