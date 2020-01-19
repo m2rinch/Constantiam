@@ -37,4 +37,5 @@ dependencies {
     implementation 'com.microsoft.azure:azure-mobile-android:3.5.1@aar'
     implementation 'com.microsoft.azure:azure-notifications-handler:3.5.1@jar'
     implementation 'com.microsoft.azure:azure-mobile-android:3.4.0@aar'
+    implementation 'com.google.code.gson:gson:2.8.5'
 }

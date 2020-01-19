@@ -7,4 +7,6 @@
     <string name="title_activity_feedback">FeedbackActivity</string>
     <string name="set_button">Set</string>
     <string name="session_button">Session</string>
+    <string name="title_activity_session">SessionActivity</string>
+    <string name="send_session_data">SEND SESSION DATA</string>
 </resources>
