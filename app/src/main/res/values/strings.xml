@@ -9,4 +9,5 @@
     <string name="session_button">Session</string>
     <string name="title_activity_session">SessionActivity</string>
     <string name="send_session_data">SEND SESSION DATA</string>
+    <string name="feedback_chart_title">Chart Title</string>
 </resources>
