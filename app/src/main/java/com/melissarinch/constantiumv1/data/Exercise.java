@@ -1,25 +1,33 @@
 package com.melissarinch.constantiumv1.data;
 
+import java.lang.reflect.Array;
+
 public class Exercise {
 
-    @com.google.gson.annotations.SerializedName("exercisename")
+    @com.google.gson.annotations.SerializedName("exercise_name")
     private String mExerciseName;
 
     @com.google.gson.annotations.SerializedName("id")
     private String mId;
 
-    @com.google.gson.annotations.SerializedName("exercisedescription")
+    @com.google.gson.annotations.SerializedName("exercise_description")
     private String mExerciseDescription;
 
-    @com.google.gson.annotations.SerializedName("imagename")
+    @com.google.gson.annotations.SerializedName("image_name")
     private String mImageName;
+
+    @com.google.gson.annotations.SerializedName("sessions")
+    private String mSessions;
+
+    @com.google.gson.annotations.SerializedName("calibrations")
+    private Array mCalibrations;
+
+    public Exercise() {
+    }
 
     @Override
     public String toString() {
         return getText();
-    }
-
-    public Exercise() {
     }
 
     public String getText() {
@@ -34,8 +42,16 @@ public class Exercise {
         return mId;
     }
 
-    public String getmImageName() {
+    public String getImageName() {
         return mImageName;
+    }
+
+    public String getSessions() {
+        return mSessions;
+    }
+
+    public Array getCalibrations() {
+        return mCalibrations;
     }
 
     @Override
@@ -43,20 +59,27 @@ public class Exercise {
         return o instanceof Exercise && ((Exercise) o).mId == mId;
     }
 
-    // Setters
-    public final void setId(String id) {
+    public void setId(String id) {
         mId = id;
     }
 
-    public final void setText(String text) {
+    public void setText(String text) {
         mExerciseName = text;
     }
 
-    public final void setDescription(String description) {
+    public void setDescription(String description) {
         mExerciseDescription = description;
     }
 
-    public final void setImageName(String imageName) {
+    public void setImageName(String imageName) {
         mImageName = imageName;
+    }
+
+    public void setSessions(String sessions) {
+        mSessions = sessions;
+    }
+
+    public void setmCalibrations(Array calibrations) {
+        mCalibrations = calibrations;
     }
 }

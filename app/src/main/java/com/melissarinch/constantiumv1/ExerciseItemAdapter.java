@@ -14,35 +14,40 @@ import androidx.annotation.Nullable;
 
 import com.melissarinch.constantiumv1.data.Exercise;
 
+import java.util.List;
+
 
 public class ExerciseItemAdapter extends ArrayAdapter<Exercise> {
 
     Context context;
     int layoutResourceId;
+    List<Exercise> exercises;
 
-    public ExerciseItemAdapter(Context context, int layoutResourceId) {
+    public ExerciseItemAdapter(Context context, int layoutResourceId, List<Exercise> exercises) {
         super(context, layoutResourceId);
         this.context = context;
         this.layoutResourceId = layoutResourceId;
+        this.exercises = exercises;
     }
 
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
         View row = convertView;
-        final Exercise currentItem = getItem(position);
-
         ViewHolder viewHolder = null;
         if(row==null)
         {
             LayoutInflater layoutInflater = ((Activity)context).getLayoutInflater();
             row = layoutInflater.inflate(layoutResourceId, parent, false);
             viewHolder = new ViewHolder(row);
+            row.setTag(viewHolder);
         }
-        row.setTag(viewHolder);
-        int resID = context.getResources().getIdentifier(currentItem.getmImageName() , "drawable", context.getPackageName());
+        else{
+            viewHolder = (ViewHolder)row.getTag();
+        }
+        int resID = context.getResources().getIdentifier(exercises.get(position).getImageName() , "drawable", context.getPackageName());
         viewHolder.exerciseImageView.setImageResource(resID);
-        viewHolder.exerciseNameTV.setText(currentItem.getText());
-        viewHolder.exerciseDescriptionTV.setText(currentItem.getExerciseDescription());
+        viewHolder.exerciseNameTV.setText(exercises.get(position).getText());
+        viewHolder.exerciseDescriptionTV.setText(exercises.get(position).getExerciseDescription());
         return row;
     }
 
