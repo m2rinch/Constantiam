@@ -30,7 +30,7 @@ public class ExerciseListActivity extends Activity {
 
     private ExerciseItemAdapter mExerciseItemAdapter;
     private MobileServiceClient mClient;
-
+    private ArrayList<Exercise> mExerciseList = new ArrayList<>();
     private String TAG = ExerciseListActivity.class.getName();
     private String URL = "http://constantiam.azurewebsites.net/";
 
@@ -40,6 +40,15 @@ public class ExerciseListActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_exercise_list);
         exerciseList = findViewById(R.id.exerciseList);
+        // populate exercise item adapter with the list of exercises and apply to view
+        mExerciseItemAdapter = new ExerciseItemAdapter(this,R.layout.row_exercise_list, mExerciseList);
+        exerciseList.setAdapter(mExerciseItemAdapter);
+        exerciseList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+
+            }
+        });
             try {
                 // update mExerciseJSON from by getting exercise list
                 getStringFromAzure();
@@ -61,17 +70,18 @@ public class ExerciseListActivity extends Activity {
                 final JsonElement mExerciseJSON = jsonElement;
                     // convert json element to list of exercises
                 Type listType = new TypeToken<List<Exercise>>(){}.getType();
-                ArrayList<Exercise> mExerciseList = new Gson().fromJson(mExerciseJSON, listType);
-
-                // populate exercise item adapter with the list of exercises and apply to view
-                mExerciseItemAdapter = new ExerciseItemAdapter(getApplicationContext(),R.layout.row_exercise_list, mExerciseList);
-                exerciseList.setAdapter(mExerciseItemAdapter);
-                exerciseList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                final ArrayList<Exercise> exercises = (new Gson().fromJson(mExerciseJSON, listType));
+                runOnUiThread(new Runnable() {
                     @Override
-                    public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                    public void run() {
+                        mExerciseItemAdapter.clear();
 
+                        for (Exercise item : exercises) {
+                            mExerciseItemAdapter.add(item);
+                        }
                     }
                 });
+
 
             }
             @Override

@@ -1,6 +1,7 @@
 package com.melissarinch.constantiumv1.data;
 
 import java.lang.reflect.Array;
+import java.util.List;
 
 public class Exercise {
 
@@ -17,10 +18,10 @@ public class Exercise {
     private String mImageName;
 
     @com.google.gson.annotations.SerializedName("sessions")
-    private String mSessions;
+    private List<Session> mSessions;
 
     @com.google.gson.annotations.SerializedName("calibrations")
-    private Array mCalibrations;
+    private List<Calibration> mCalibrations;
 
     public Exercise() {
     }
@@ -46,11 +47,11 @@ public class Exercise {
         return mImageName;
     }
 
-    public String getSessions() {
+    public List<Session> getSessions() {
         return mSessions;
     }
 
-    public Array getCalibrations() {
+    public List<Calibration> getCalibrations() {
         return mCalibrations;
     }
 
@@ -75,11 +76,11 @@ public class Exercise {
         mImageName = imageName;
     }
 
-    public void setSessions(String sessions) {
+    public void setSessions(List<Session> sessions) {
         mSessions = sessions;
     }
 
-    public void setmCalibrations(Array calibrations) {
+    public void setmCalibrations(List<Calibration> calibrations) {
         mCalibrations = calibrations;
     }
 }

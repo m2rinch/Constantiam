@@ -19,13 +19,13 @@ import java.util.List;
 
 public class ExerciseItemAdapter extends ArrayAdapter<Exercise> {
 
-    Context context;
+    Activity activity;
     int layoutResourceId;
     List<Exercise> exercises;
 
-    public ExerciseItemAdapter(Context context, int layoutResourceId, List<Exercise> exercises) {
-        super(context, layoutResourceId);
-        this.context = context;
+    public ExerciseItemAdapter(Activity activity, int layoutResourceId, List<Exercise> exercises) {
+        super(activity, layoutResourceId);
+        this.activity = activity;
         this.layoutResourceId = layoutResourceId;
         this.exercises = exercises;
     }
@@ -36,7 +36,7 @@ public class ExerciseItemAdapter extends ArrayAdapter<Exercise> {
         ViewHolder viewHolder = null;
         if(row==null)
         {
-            LayoutInflater layoutInflater = ((Activity)context).getLayoutInflater();
+            LayoutInflater layoutInflater = (activity).getLayoutInflater();
             row = layoutInflater.inflate(layoutResourceId, parent, false);
             viewHolder = new ViewHolder(row);
             row.setTag(viewHolder);
@@ -44,7 +44,7 @@ public class ExerciseItemAdapter extends ArrayAdapter<Exercise> {
         else{
             viewHolder = (ViewHolder)row.getTag();
         }
-        int resID = context.getResources().getIdentifier(exercises.get(position).getImageName() , "drawable", context.getPackageName());
+        int resID = activity.getResources().getIdentifier("squat" , "drawable", activity.getPackageName());
         viewHolder.exerciseImageView.setImageResource(resID);
         viewHolder.exerciseNameTV.setText(exercises.get(position).getText());
         viewHolder.exerciseDescriptionTV.setText(exercises.get(position).getExerciseDescription());
