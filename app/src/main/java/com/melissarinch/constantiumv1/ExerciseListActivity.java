@@ -30,7 +30,6 @@ public class ExerciseListActivity extends Activity {
 
     private ExerciseItemAdapter mExerciseItemAdapter;
     private MobileServiceClient mClient;
-    private ArrayList<Exercise> mExerciseList = new ArrayList<>();
     private String TAG = ExerciseListActivity.class.getName();
     private String URL = "http://constantiam.azurewebsites.net/";
 
@@ -41,7 +40,7 @@ public class ExerciseListActivity extends Activity {
         setContentView(R.layout.activity_exercise_list);
         exerciseList = findViewById(R.id.exerciseList);
         // populate exercise item adapter with the list of exercises and apply to view
-        mExerciseItemAdapter = new ExerciseItemAdapter(this,R.layout.row_exercise_list, mExerciseList);
+        mExerciseItemAdapter = new ExerciseItemAdapter(this,R.layout.row_exercise_list);
         exerciseList.setAdapter(mExerciseItemAdapter);
         exerciseList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override

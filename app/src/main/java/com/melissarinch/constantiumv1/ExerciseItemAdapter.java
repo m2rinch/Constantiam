@@ -23,16 +23,17 @@ public class ExerciseItemAdapter extends ArrayAdapter<Exercise> {
     int layoutResourceId;
     List<Exercise> exercises;
 
-    public ExerciseItemAdapter(Activity activity, int layoutResourceId, List<Exercise> exercises) {
+    public ExerciseItemAdapter(Activity activity, int layoutResourceId) {
         super(activity, layoutResourceId);
         this.activity = activity;
         this.layoutResourceId = layoutResourceId;
-        this.exercises = exercises;
     }
 
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
         View row = convertView;
+        final Exercise currentItem = getItem(position);
+
         ViewHolder viewHolder = null;
         if(row==null)
         {
@@ -46,8 +47,8 @@ public class ExerciseItemAdapter extends ArrayAdapter<Exercise> {
         }
         int resID = activity.getResources().getIdentifier("squat" , "drawable", activity.getPackageName());
         viewHolder.exerciseImageView.setImageResource(resID);
-        viewHolder.exerciseNameTV.setText(exercises.get(position).getText());
-        viewHolder.exerciseDescriptionTV.setText(exercises.get(position).getExerciseDescription());
+        viewHolder.exerciseNameTV.setText(currentItem.getText());
+        viewHolder.exerciseDescriptionTV.setText(currentItem.getExerciseDescription());
         return row;
     }
 
