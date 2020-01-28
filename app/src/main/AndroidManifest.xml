@@ -12,20 +12,18 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".SessionActivity"
-            android:label="@string/title_activity_session"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:name=".SessionActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
         <activity android:name=".FeedbackActivity"></activity>
         <activity android:name=".SettingsActivity" />
         <activity android:name=".ExerciseFeedbackActivity" />
-        <activity android:name=".TimerScreenActivity" />
+        <activity android:name=".TimerScreenActivity">
+        </activity>
         <activity android:name=".ExerciseListActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <activity
             android:name=".MainActivity"

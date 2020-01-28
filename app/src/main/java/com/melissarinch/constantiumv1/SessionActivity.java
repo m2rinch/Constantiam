@@ -17,9 +17,12 @@ import com.microsoft.windowsazure.mobileservices.MobileServiceClient;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import android.os.SystemClock;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Chronometer;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 import org.json.JSONException;
@@ -33,8 +36,13 @@ import static com.microsoft.windowsazure.mobileservices.http.HttpConstants.GetMe
 import static com.microsoft.windowsazure.mobileservices.http.HttpConstants.PostMethod;
 
 public class SessionActivity extends AppCompatActivity {
-    Button sessionButton;
-    String sensorData = "[2 3 4 5], [2 4 5 6]";
+    private Button sessionButton;
+    private Chronometer chronometer;
+    private boolean running;
+    private long pauseOffset;
+    private ImageButton playButton;
+    private ImageButton pauseButton;
+    private String sensorData = "[2 3 4 5], [2 4 5 6]";
 
     Gson gson = new Gson();
 
@@ -43,8 +51,9 @@ public class SessionActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_session);
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+        playButton = findViewById(R.id.stopwatchPlay);
+        pauseButton = findViewById(R.id.stopwatchPause);
+        chronometer = findViewById(R.id.chronometer);
         sessionButton = findViewById(R.id.session_button);
         sessionButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -55,24 +64,41 @@ public class SessionActivity extends AppCompatActivity {
                 }
             }
         });
-
-        FloatingActionButton fab = findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
-
     }
 
+    // user logs in
+    // sees the play button -> should not see pause and finish and restart session
+    // clicks play -> set timer to running
+    // change play button to pause, show finish button
+    // clicks (now) pause button -> set timer to !running,
+    // clicks finish button, -> set timer to !running, send string
+    public void startStopwatch(View v){
+        if(!running){
+            playButton.setImageResource(R.drawable.stop);
+            chronometer.setBase(SystemClock.elapsedRealtime() - pauseOffset);
+            chronometer.start();
+            running = true;
+        }
+    }
+
+    public void pauseStopwatch(View v){
+        if(running){
+            chronometer.stop();
+            pauseOffset = SystemClock.elapsedRealtime() - chronometer.getBase();
+            running = false;
+        }
+    }
+
+    public void resetStopwatch(View v){
+        chronometer.setBase(SystemClock.elapsedRealtime());
+        pauseOffset = 0;
+    }
     public void sendString(final String _sensorData) throws MalformedURLException {
 
         SessionData sessionData = new SessionData();
         sessionData.setmId("1");
         sessionData.setmCreatedAt(new Date());
-        sessionData.setmDuration(4.55);
+        sessionData.setmDuration((double)pauseOffset);
         sessionData.setmExerciseId(1);
         sessionData.setmUserId(1);
         sessionData.setmWeight(4);
