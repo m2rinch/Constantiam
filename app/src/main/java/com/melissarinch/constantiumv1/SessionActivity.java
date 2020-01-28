@@ -1,6 +1,7 @@
 package com.melissarinch.constantiumv1;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -23,6 +24,9 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Chronometer;
 import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.NumberPicker;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import org.json.JSONException;
@@ -37,11 +41,11 @@ import static com.microsoft.windowsazure.mobileservices.http.HttpConstants.PostM
 
 public class SessionActivity extends AppCompatActivity {
     private Button sessionButton;
-    private Chronometer chronometer;
+    private Chronometer chronometer; // taken from https://www.youtube.com/watch?v=RLnb4vVkftc
     private boolean running;
     private long pauseOffset;
-    private ImageButton playButton;
-    private ImageButton pauseButton;
+    private NumberPicker weightPicker;
+    private ImageView playPause;
     private String sensorData = "[2 3 4 5], [2 4 5 6]";
 
     Gson gson = new Gson();
@@ -51,8 +55,9 @@ public class SessionActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_session);
-        playButton = findViewById(R.id.stopwatchPlay);
-        pauseButton = findViewById(R.id.stopwatchPause);
+        playPause = findViewById(R.id.playPauseSession);
+        weightPicker = findViewById(R.id.weightPicker);
+        playPause.setImageResource(R.drawable.play);
         chronometer = findViewById(R.id.chronometer);
         sessionButton = findViewById(R.id.session_button);
         sessionButton.setOnClickListener(new View.OnClickListener() {
@@ -64,6 +69,8 @@ public class SessionActivity extends AppCompatActivity {
                 }
             }
         });
+        weightPicker.setMinValue(0);
+        weightPicker.setMaxValue(50);
     }
 
     // user logs in
@@ -72,26 +79,27 @@ public class SessionActivity extends AppCompatActivity {
     // change play button to pause, show finish button
     // clicks (now) pause button -> set timer to !running,
     // clicks finish button, -> set timer to !running, send string
-    public void startStopwatch(View v){
+    public void controlStopwatch(View v){
         if(!running){
-            playButton.setImageResource(R.drawable.stop);
+            playPause.setImageResource(R.drawable.stop);
             chronometer.setBase(SystemClock.elapsedRealtime() - pauseOffset);
             chronometer.start();
             running = true;
+        } else {
+            playPause.setImageResource(R.drawable.play);
+            pauseStopwatch();
         }
     }
 
-    public void pauseStopwatch(View v){
-        if(running){
+    public void pauseStopwatch(){
             chronometer.stop();
             pauseOffset = SystemClock.elapsedRealtime() - chronometer.getBase();
             running = false;
-        }
     }
 
-    public void resetStopwatch(View v){
-        chronometer.setBase(SystemClock.elapsedRealtime());
-        pauseOffset = 0;
+    public void restartSession(View view){
+        Intent intent = new Intent(getApplicationContext(), SessionActivity.class);
+        startActivity(intent);
     }
     public void sendString(final String _sensorData) throws MalformedURLException {
 
@@ -101,7 +109,7 @@ public class SessionActivity extends AppCompatActivity {
         sessionData.setmDuration((double)pauseOffset);
         sessionData.setmExerciseId(1);
         sessionData.setmUserId(1);
-        sessionData.setmWeight(4);
+        sessionData.setmWeight(weightPicker.getValue());
         sessionData.setmSensorData(_sensorData);
 
         Log.d("Session Activity JSON", gson.toJson(sessionData));

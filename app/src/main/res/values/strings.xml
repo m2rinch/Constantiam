@@ -10,4 +10,7 @@
     <string name="title_activity_session">SessionActivity</string>
     <string name="send_session_data">SEND SESSION DATA</string>
     <string name="feedback_chart_title">Chart Title</string>
+    <string name="reset_session"><u>Reset session?</u></string>
+    <string name="weight_lifted">Weight Lifted</string>
+    <string name="finish">Finish</string>
 </resources>

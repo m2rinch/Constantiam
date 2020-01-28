@@ -6,43 +6,56 @@
     android:orientation="vertical"
     android:gravity="center"
     tools:context=".SessionActivity">
+    <include layout="@layout/titlebar"
+        android:layout_height="40dp"
+        android:layout_width="match_parent">
+    </include>
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:text="Neutral Squat"
+        style="@style/exerciseNameStyle"
         android:id="@+id/exerciseNameSession">
     </TextView>
-
-    <ImageButton
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:background="@drawable/play"
-        android:onClick="startStopwatch"
-        android:id="@+id/stopwatchPlay"/>
-    <ImageButton
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:background="@drawable/stop"
-        android:onClick="pauseStopwatch"
-        android:id="@+id/stopwatchPause"/>
-    <Button
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="RESET"
-        android:onClick="resetStopwatch"
-        android:id="@+id/resetButton"/>
-
+        android:gravity="center"
+        android:orientation="horizontal">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/weight_lifted"/>
+        <NumberPicker
+            android:layout_width="30dp"
+            android:layout_height="50dp"
+            android:id="@+id/weightPicker"/>
+    </LinearLayout>
     <Chronometer
         android:id="@+id/chronometer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="30dp" />
+        android:layout_marginTop="50dp"
+        style="@style/stopwatchText"/>
+    <ImageView
+        android:id="@+id/playPauseSession"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:onClick="controlStopwatch"
+        android:src="@drawable/play" />
 
     <Button
         android:id="@+id/session_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/send_session_data" />
-
-    <include layout="@layout/content_session" />
-
+        android:text="@string/finish" />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/reset_session"
+        android:onClick="restartSession"
+        android:id="@+id/resetTV"/>
+<include layout="@layout/content_session"/>
 </LinearLayout>

@@ -7,7 +7,17 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
     </style>
-
+    <style name="stopwatchText">
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">70sp</item>
+        <item name="android:layout_margin">10dp</item>
+    </style>
+    <style name="exerciseNameStyle">
+        <item name="android:textStyle">bold</item>
+        <item name="android:color">@color/colorBlack</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:layout_margin">5dp</item>
+    </style>
     <style name="AppTheme.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
