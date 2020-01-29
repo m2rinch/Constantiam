@@ -3,20 +3,28 @@ package com.melissarinch.constantiumv1.data;
 import java.util.Date;
 
 public class Session {
+    @com.google.gson.annotations.SerializedName("id")
     private int mId;
 
-    private Date mCreatedAt;
-
+    @com.google.gson.annotations.SerializedName("user_id")
     private int mUserId;
 
+    @com.google.gson.annotations.SerializedName("exercise_id")
     private int mExerciseId;
 
+    @com.google.gson.annotations.SerializedName("weight")
     private double mWeight;
 
+    @com.google.gson.annotations.SerializedName("duration")
     private double mDuration;
 
+    @com.google.gson.annotations.SerializedName("created_at")
+    private Date mCreatedAt;
+
+    @com.google.gson.annotations.SerializedName("keychar_id")
     private int mKeyCharId;
 
+    @com.google.gson.annotations.SerializedName("suggestions")
     private String mSuggestions;
 
     public int getId() {

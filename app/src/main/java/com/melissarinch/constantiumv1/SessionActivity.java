@@ -11,7 +11,10 @@ import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.melissarinch.constantiumv1.data.Exercise;
+import com.melissarinch.constantiumv1.data.Session;
 import com.melissarinch.constantiumv1.data.SessionData;
 import com.microsoft.windowsazure.mobileservices.MobileServiceClient;
 
@@ -32,6 +35,7 @@ import android.widget.Toast;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.Serializable;
 import java.net.MalformedURLException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -47,8 +51,8 @@ public class SessionActivity extends AppCompatActivity {
     private NumberPicker weightPicker;
     private ImageView playPause;
     private String sensorData = "[2 3 4 5], [2 4 5 6]";
-
-    Gson gson = new Gson();
+    //private Exercise exercise = (Exercise) getIntent().getSerializableExtra("Exercise");
+    private Gson gson = new Gson();
 
 
     @Override
@@ -112,7 +116,7 @@ public class SessionActivity extends AppCompatActivity {
         sessionData.setmWeight(weightPicker.getValue());
         sessionData.setmSensorData(_sensorData);
 
-        Log.d("Session Activity JSON", gson.toJson(sessionData));
+        // Log.d("Session Activity JSON", gson.toJson(sessionData));
         JsonElement sessionJSON = new JsonParser().parse(gson.toJson(sessionData));
 
         // Create the MobileService Client object and set your backend URL        
@@ -127,15 +131,21 @@ public class SessionActivity extends AppCompatActivity {
             public void onSuccess(JsonElement jsonElement) {
 
                 // You are expecting a String you can just output the result.
-                final String result = jsonElement.toString();
+                JsonObject result = jsonElement.getAsJsonObject();
+                result.remove("constantiam_user");
+                result.remove("exercise");
+                result.remove("key_char");
 
+                final Session session = new Gson().fromJson(result.toString(), Session.class);
                 //since you are on async task you need to show the result on the UI thread
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        Toast.makeText(getApplicationContext(), result, Toast.LENGTH_LONG).show();
+
+                        Toast.makeText(getApplicationContext(), session.toString(), Toast.LENGTH_LONG).show();
                     }
                 });
+
 
             }
 

@@ -1,9 +1,10 @@
 package com.melissarinch.constantiumv1.data;
 
+import java.io.Serializable;
 import java.lang.reflect.Array;
 import java.util.List;
 
-public class Exercise {
+public class Exercise implements Serializable {
 
     @com.google.gson.annotations.SerializedName("exercise_name")
     private String mExerciseName;

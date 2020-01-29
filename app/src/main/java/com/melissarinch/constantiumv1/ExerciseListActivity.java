@@ -1,6 +1,7 @@
 package com.melissarinch.constantiumv1;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -45,7 +46,10 @@ public class ExerciseListActivity extends Activity {
         exerciseList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-
+                Intent intent = new Intent(getApplicationContext(), ExerciseFeedbackActivity.class);
+                Exercise exercise = (Exercise) exerciseList.getItemAtPosition(i);
+                intent.putExtra("Exercise", exercise);
+                startActivity(intent);
             }
         });
             try {
