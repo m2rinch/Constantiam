@@ -13,4 +13,7 @@
     <string name="reset_session"><u>Reset session?</u></string>
     <string name="weight_lifted">Weight Lifted</string>
     <string name="finish">Finish</string>
+    <string name="calibration_prompt">Please Stand Still for Calibration</string>
+    <string name="cancel_button">Cancel</string>
+    <string name="calibration_last">Last Calibrated: </string>
 </resources>
