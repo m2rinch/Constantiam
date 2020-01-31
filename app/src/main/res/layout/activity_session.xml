@@ -1,65 +1,85 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/linearLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:weightSum="1"
     android:gravity="center"
+    android:weightSum="1"
     tools:context=".SessionActivity">
+
     <include layout="@layout/titlebar"
-        android:layout_height="40dp"
-        android:layout_width="match_parent">
-    </include>
+        android:id="@+id/titlebar"
+        app:layout_constraintTop_toTopOf="parent"/>
     <TextView
+        android:id="@+id/exerciseNameSession"
+        style="@style/exerciseNameStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Neutral Squat"
-        style="@style/exerciseNameStyle"
-        android:id="@+id/exerciseNameSession">
-    </TextView>
-    <LinearLayout
-        android:layout_width="match_parent"
+        app:layout_constraintBottom_toTopOf="@+id/weightTV"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/titlebar"/>
+
+    <TextView
+        android:id="@+id/weightTV"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:gravity="center"
-        android:orientation="horizontal">
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/weight_lifted"/>
-        <NumberPicker
-            android:layout_width="30dp"
-            android:layout_height="50dp"
-            android:id="@+id/weightPicker"/>
-    </LinearLayout>
+        android:text="@string/weight_lifted"
+        app:layout_constraintBottom_toTopOf="@+id/weightPicker"
+        app:layout_constraintTop_toBottomOf="@+id/exerciseNameSession"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"/>
+
+    <NumberPicker
+        android:id="@+id/weightPicker"
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/chronometer"
+        app:layout_constraintTop_toBottomOf="@+id/weightTV" />
 
     <Chronometer
         android:id="@+id/chronometer"
         style="@style/stopwatchText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="100dp"
-        android:layout_gravity="center" />
+        app:layout_constraintBottom_toTopOf="@+id/playPauseSession"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/weightPicker" />
 
     <ImageView
         android:id="@+id/playPauseSession"
         android:layout_width="50dp"
         android:layout_height="50dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginBottom="10dp"
         android:onClick="controlStopwatch"
-        android:src="@drawable/play" />
+        android:src="@drawable/play"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/session_button"
+        app:layout_constraintTop_toBottomOf="@+id/chronometer" />
 
     <Button
         android:id="@+id/session_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/finish" />
+        android:text="@string/finish"
+        app:layout_constraintBottom_toTopOf="@+id/resetTV"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"/>
+
     <TextView
+        android:id="@+id/resetTV"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/reset_session"
         android:onClick="restartSession"
-        android:id="@+id/resetTV"/>
-<include layout="@layout/content_session"/>
-</LinearLayout>
+        android:text="@string/reset_session"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/session_button" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
