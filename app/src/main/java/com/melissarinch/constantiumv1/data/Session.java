@@ -19,7 +19,7 @@ public class Session {
     private double mDuration;
 
     @com.google.gson.annotations.SerializedName("created_at")
-    private Date mCreatedAt;
+    private String mCreatedAt;
 
     @com.google.gson.annotations.SerializedName("keychar_id")
     private int mKeyCharId;
@@ -35,11 +35,11 @@ public class Session {
         this.mId = mId;
     }
 
-    public Date getCreatedAt() {
+    public String getCreatedAt() {
         return mCreatedAt;
     }
 
-    public void setCreatedAt(Date mCreatedAt) {
+    public void setCreatedAt(String mCreatedAt) {
         this.mCreatedAt = mCreatedAt;
     }
 

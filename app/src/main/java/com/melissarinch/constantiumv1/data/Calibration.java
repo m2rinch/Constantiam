@@ -9,6 +9,34 @@ public class Calibration {
     private int mExerciseId;
     private int mKeyCharId;
 
+    public Exercise getmExercise() {
+        return mExercise;
+    }
+
+    public void setmExercise(Exercise mExercise) {
+        this.mExercise = mExercise;
+    }
+
+    public KeyChar getmKeyChar() {
+        return mKeyChar;
+    }
+
+    public void setmKeyChar(KeyChar mKeyChar) {
+        this.mKeyChar = mKeyChar;
+    }
+
+    public ConstantiamUser getmUser() {
+        return mUser;
+    }
+
+    public void setmUser(ConstantiamUser mUser) {
+        this.mUser = mUser;
+    }
+
+    private Exercise mExercise;
+    private KeyChar mKeyChar;
+    private ConstantiamUser mUser;
+
     public int getId() {
         return mId;
     }

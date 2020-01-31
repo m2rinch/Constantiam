@@ -27,6 +27,13 @@
         tools:layout_editor_absoluteY="128dp" />
 
     <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/startCalibrationBtn"
+        android:onClick="startCalibration"
+        android:text="Start Calibration"/>
+
+    <Button
         android:id="@+id/button2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

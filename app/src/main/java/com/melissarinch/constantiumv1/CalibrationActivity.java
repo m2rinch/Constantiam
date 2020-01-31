@@ -1,12 +1,11 @@
 package com.melissarinch.constantiumv1;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.View;
-import android.widget.Toast;
 
-import androidx.appcompat.app.AppCompatActivity;
-
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.common.util.concurrent.FutureCallback;
 import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
@@ -16,25 +15,54 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.melissarinch.constantiumv1.data.Calibration;
 import com.melissarinch.constantiumv1.data.CalibrationData;
+import com.melissarinch.constantiumv1.data.ConstantiamUser;
+import com.melissarinch.constantiumv1.data.Exercise;
+import com.melissarinch.constantiumv1.data.KeyChar;
 import com.melissarinch.constantiumv1.data.Session;
 import com.melissarinch.constantiumv1.data.SessionData;
 import com.microsoft.windowsazure.mobileservices.MobileServiceClient;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+
+import android.os.SystemClock;
+import android.util.Log;
+import android.view.View;
+import android.widget.Button;
+import android.widget.Chronometer;
+import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.NumberPicker;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.Serializable;
 import java.net.MalformedURLException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import static com.microsoft.windowsazure.mobileservices.http.HttpConstants.GetMethod;
 import static com.microsoft.windowsazure.mobileservices.http.HttpConstants.PostMethod;
 
 public class CalibrationActivity extends AppCompatActivity {
+
+    private Button startCalibrationBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_calibration);
+        startCalibrationBtn = findViewById(R.id.startCalibrationBtn);
+
     }
 
-    private void startCalibration(View view){
+    public void startCalibration(View view) throws MalformedURLException {
         // start bluetooth + countdown timer + change play to pause sign
+
+        sendCalibrationData("[2 4 5 6]");
     }
 
     private void onTimerComplete(){
@@ -50,32 +78,33 @@ public class CalibrationActivity extends AppCompatActivity {
         calibrationData.setmUserId(1);
         calibrationData.setmSensorData(_calibrationData);
 
+
         JsonElement calibrationJSON = new JsonParser().parse(new Gson().toJson(calibrationData));
 
         // Create the MobileService Client object and set your backend URL
         String yourURL = "http://constantiam.azurewebsites.net/";
         MobileServiceClient mClient = new MobileServiceClient(yourURL, this);     // Your query pointing to /api/values/{String}
-        ListenableFuture<JsonElement> query = mClient.invokeApi("calibrationData", calibrationJSON, PostMethod, null);
 
+        ListenableFuture<JsonElement> query = mClient.invokeApi("CalibrationData", calibrationJSON, PostMethod, null);
 
-        // Callback method                                                                        s
+        // Callback method
         Futures.addCallback(query, new FutureCallback<JsonElement>() {
             @Override
-            public void onSuccess(JsonElement jsonElement) {
+            public void onSuccess(final JsonElement jsonElement) {
 
                 // You are expecting a String you can just output the result.
                 JsonObject result = jsonElement.getAsJsonObject();
-                result.remove("constantiam_user");
-                result.remove("exercise");
-                result.remove("key_char");
+              //  result.remove("constantiam_user");
+               // result.remove("exercise");
+               // result.remove("key_char");
 
-                final Calibration calibration = new Gson().fromJson(result.toString(), Calibration.class);
+               // final Calibration calibration = new Gson().fromJson(result.toString(), Calibration.class);
                 //since you are on async task you need to show the result on the UI thread
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
 
-                        Toast.makeText(getApplicationContext(), calibration.toString(), Toast.LENGTH_LONG).show();
+                        Toast.makeText(getApplicationContext(), jsonElement.toString(), Toast.LENGTH_LONG).show();
                     }
                 });
 
