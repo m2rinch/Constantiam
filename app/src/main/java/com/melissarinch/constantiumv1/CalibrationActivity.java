@@ -25,6 +25,7 @@ import com.microsoft.windowsazure.mobileservices.MobileServiceClient;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import android.os.CountDownTimer;
 import android.os.SystemClock;
 import android.util.Log;
 import android.view.View;
@@ -47,27 +48,59 @@ import java.util.Date;
 import static com.microsoft.windowsazure.mobileservices.http.HttpConstants.GetMethod;
 import static com.microsoft.windowsazure.mobileservices.http.HttpConstants.PostMethod;
 
-public class CalibrationActivity extends AppCompatActivity {
+public class CalibrationActivity extends TimerScreenActivity{
 
-    private Button startCalibrationBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_calibration);
-        startCalibrationBtn = findViewById(R.id.startCalibrationBtn);
+        initViews();
+        beginCalibration.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startStop();
+            }
+        });
 
     }
 
-    public void startCalibration(View view) throws MalformedURLException {
-        // start bluetooth + countdown timer + change play to pause sign
-
-        sendCalibrationData("[2 4 5 6]");
+    @Override
+    public void startStop() {
+        super.startStop();
+        startCountDownTimer();
     }
 
-    private void onTimerComplete(){
-        // reset time and change pause to play sign
-        // send calibration data to for processing
+    public void startCountDownTimer() {
+        countDownTimer = new CountDownTimer(timeCountInMilliSeconds, 1000) {
+            @Override
+            public void onTick(long millisUntilFinished) {
+
+                textViewTime.setText(hmsTimeFormatter(millisUntilFinished));
+
+                progressBarCircle.setProgress((int) (millisUntilFinished / 1000));
+            }
+
+            @Override
+            public void onFinish() {
+                timeCountInMilliSeconds = 0;
+                textViewTime.setText(hmsTimeFormatter(timeCountInMilliSeconds));
+                setProgressBarValues();
+                timerStatus = TimerStatus.STOPPED;
+                try {
+                    sendCalibrationData("[2 4 5 6]");
+                } catch (MalformedURLException e) {
+                    e.printStackTrace();
+                }
+            }
+
+        }.start();
+        countDownTimer.start();
+    }
+
+    public void restartCalibration(View view){
+        Intent intent = new Intent(getApplicationContext(), CalibrationActivity.class);
+        startActivity(intent);
     }
 
     public void sendCalibrationData(final String _calibrationData) throws MalformedURLException {
