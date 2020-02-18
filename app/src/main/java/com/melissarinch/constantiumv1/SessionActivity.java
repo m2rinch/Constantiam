@@ -122,12 +122,16 @@ public class SessionActivity extends AppCompatActivity {
                 result.remove("key_char");
 
                 final Session session = new Gson().fromJson(result.toString(), Session.class);
-                //since you are on async task you need to show the result on the UI thread
+                // go to feedback screen if successful and send session object
+                Intent intent = new Intent(getApplicationContext(), ExerciseFeedbackActivity.class);
+                intent.putExtra("Session", session);
+                startActivity(intent);
+
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
 
-                        Toast.makeText(getApplicationContext(), String.valueOf("COP_overall: " + session.getmCOPOverall()), Toast.LENGTH_LONG).show();
+                       // Toast.makeText(getApplicationContext(), String.valueOf("COP_overall: " + session.getmCOPOverall()), Toast.LENGTH_LONG).show();
                     }
                 });
 

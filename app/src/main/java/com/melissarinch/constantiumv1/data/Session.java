@@ -1,8 +1,9 @@
 package com.melissarinch.constantiumv1.data;
 
-import java.util.Date;
+import java.io.Serializable;
 
-public class Session {
+@SuppressWarnings("serial") //With this annotation we are going to hide compiler warnings
+public class Session implements Serializable {
     @com.google.gson.annotations.SerializedName("id")
     private int mId;
 

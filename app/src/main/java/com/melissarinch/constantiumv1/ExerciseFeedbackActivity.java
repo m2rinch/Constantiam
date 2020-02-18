@@ -2,6 +2,7 @@ package com.melissarinch.constantiumv1;
 
 import android.graphics.Color;
 import android.os.Bundle;
+import android.widget.Toast;
 
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.Description;
@@ -10,6 +11,7 @@ import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
+import com.melissarinch.constantiumv1.data.Session;
 import com.melissarinch.constantiumv1.data.WeekLineChart;
 
 import java.util.ArrayList;
@@ -24,13 +26,18 @@ public class ExerciseFeedbackActivity extends AppCompatActivity {
     int[] xCoords = {0,1,2,3};
     int[] yCoords = {4,1,2,4};
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_exercise_feedback);
 
 
+        if (getIntent().hasExtra("Session")){
+
+            Session session = (Session) getIntent().getSerializableExtra("Session");
+            Toast.makeText(getApplicationContext(), String.valueOf("COP_overall: " + session.getmCOPOverall()), Toast.LENGTH_LONG).show();
+
+        }
         // Create Feedback Chart
         chart = (LineChart) findViewById(R.id.feedbackChart);
 
@@ -39,6 +46,8 @@ public class ExerciseFeedbackActivity extends AppCompatActivity {
         for (int i = 0; i < xCoords.length; i++) {
             entries.add(new Entry(xCoords[i],yCoords[i]));
         }
+
+
 
         // create new data set
         LineDataSet dataSet = new LineDataSet(entries, "Random Data Set 1");
@@ -67,4 +76,5 @@ public class ExerciseFeedbackActivity extends AppCompatActivity {
         chart.invalidate();
 
     }
+
 }
