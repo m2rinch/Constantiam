@@ -24,6 +24,18 @@ public class Session {
     @com.google.gson.annotations.SerializedName("keychar_id")
     private int mKeyCharId;
 
+    @com.google.gson.annotations.SerializedName("cop_right")
+    private String mCOPRight;
+
+    @com.google.gson.annotations.SerializedName("cop_left")
+    private String mCOPLeft;
+
+    @com.google.gson.annotations.SerializedName("cop_overall")
+    private String mCOPOverall;
+
+    @com.google.gson.annotations.SerializedName("si")
+    private String mSI;
+
     @com.google.gson.annotations.SerializedName("suggestions")
     private String mSuggestions;
 
@@ -89,5 +101,37 @@ public class Session {
 
     public void setSuggestions(String mSuggestions) {
         this.mSuggestions = mSuggestions;
+    }
+
+    public String getmCOPRight() {
+        return mCOPRight;
+    }
+
+    public void setmCOPRight(String mCOPRight) {
+        this.mCOPRight = mCOPRight;
+    }
+
+    public String getmCOPLeft() {
+        return mCOPLeft;
+    }
+
+    public void setmCOPLeft(String mCOPLeft) {
+        this.mCOPLeft = mCOPLeft;
+    }
+
+    public String getmCOPOverall() {
+        return mCOPOverall;
+    }
+
+    public void setmCOPOverall(String mCOPOverall) {
+        this.mCOPOverall = mCOPOverall;
+    }
+
+    public String getmSI() {
+        return mSI;
+    }
+
+    public void setmSI(String mSI) {
+        this.mSI = mSI;
     }
 }
