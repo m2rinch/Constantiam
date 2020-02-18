@@ -23,8 +23,8 @@ import androidx.appcompat.app.AppCompatActivity;
 public class ExerciseFeedbackActivity extends AppCompatActivity {
 
     LineChart chart;
-    int[] xCoords = {0,1,2,3};
-    int[] yCoords = {4,1,2,4};
+    int[] xCoords;
+    int[] yCoords;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,49 +32,71 @@ public class ExerciseFeedbackActivity extends AppCompatActivity {
         setContentView(R.layout.activity_exercise_feedback);
 
 
-        if (getIntent().hasExtra("Session")){
+        if (getIntent().hasExtra("Session")) {
 
             Session session = (Session) getIntent().getSerializableExtra("Session");
-            Toast.makeText(getApplicationContext(), String.valueOf("COP_overall: " + session.getmCOPOverall()), Toast.LENGTH_LONG).show();
+            yCoords = parseData(session.getmCOPOverall());
+            xCoords = generateTimePoints(yCoords);
+           // Toast.makeText(getApplicationContext(), String.valueOf("COP_overall: " + session.getmCOPOverall()), Toast.LENGTH_LONG).show();
 
+
+            // Create Feedback Chart
+            chart = (LineChart) findViewById(R.id.feedbackChart);
+
+            // add data points to Entry object
+            List<Entry> entries = new ArrayList<Entry>();
+            for (int i = 0; i < xCoords.length; i++) {
+                entries.add(new Entry(xCoords[i], yCoords[i]));
+            }
+
+
+            // create new data set
+            LineDataSet dataSet = new LineDataSet(entries, "Random Data Set 1");
+            dataSet.setColor(Color.parseColor("#701112"));
+            dataSet.setValueTextColor(Color.parseColor("#FFFFFF"));
+
+            // modify x-axis
+            XAxis xAxis = chart.getXAxis();
+            xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
+            xAxis.setGranularityEnabled(true); // prevent x-axis duplicates
+           // xAxis.setValueFormatter(new WeekLineChart());
+
+            // modify y-axis
+            YAxis yAxisRight = chart.getAxisRight();
+            yAxisRight.setEnabled(false);
+
+            // modify description
+            Description description = chart.getDescription();
+            description.setText("Random data description");
+            description.setEnabled(true);
+
+            // add data set to line chart
+            LineData lineData = new LineData(dataSet);
+            chart.setData(lineData);
+            // refresh
+            chart.invalidate();
         }
-        // Create Feedback Chart
-        chart = (LineChart) findViewById(R.id.feedbackChart);
 
-        // add data points to Entry object
-        List<Entry> entries = new ArrayList<Entry>();
-        for (int i = 0; i < xCoords.length; i++) {
-            entries.add(new Entry(xCoords[i],yCoords[i]));
+    }
+
+    private int[] parseData(String _responseData){
+
+        // string split on comma
+        String[] stringData = _responseData.split(",");
+        // convert to int array
+        int[] intData = new int[stringData.length];
+        for(int i = 0; i < stringData.length; i++){
+            intData[i] = Integer.parseInt(stringData[i]);
         }
+        return intData;
+    }
 
-
-
-        // create new data set
-        LineDataSet dataSet = new LineDataSet(entries, "Random Data Set 1");
-        dataSet.setColor(Color.parseColor("#701112"));
-        dataSet.setValueTextColor(Color.parseColor("#FFFFFF"));
-
-        // modify x-axis
-        XAxis xAxis = chart.getXAxis();
-        xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
-        xAxis.setGranularityEnabled(true); // prevent x-axis duplicates
-        xAxis.setValueFormatter(new WeekLineChart());
-
-        // modify y-axis
-        YAxis yAxisRight = chart.getAxisRight();
-        yAxisRight.setEnabled(false);
-
-        // modify description
-        Description description = chart.getDescription();
-        description.setText("Random data description");
-        description.setEnabled(true);
-
-        // add data set to line chart
-        LineData lineData = new LineData(dataSet);
-        chart.setData(lineData);
-        // refresh
-        chart.invalidate();
-
+    private int[] generateTimePoints(int[] _yData){
+        int[] timeData = new int[_yData.length];
+        for(int i = 0; i < _yData.length; i++){
+            timeData[i] = i;
+        }
+        return timeData;
     }
 
 }
