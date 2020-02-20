@@ -11,12 +11,15 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.github.mikephil.charting.charts.LineChart;
+import com.github.mikephil.charting.charts.ScatterChart;
 import com.github.mikephil.charting.components.Description;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
+import com.github.mikephil.charting.data.ScatterData;
+import com.github.mikephil.charting.data.ScatterDataSet;
 import com.melissarinch.constantiumv1.data.Session;
 
 import java.util.ArrayList;
@@ -29,7 +32,7 @@ import androidx.appcompat.app.AppCompatActivity;
 public class ExerciseFeedbackActivity extends Activity implements AdapterView.OnItemSelectedListener {
 
     Spinner chartSpinner;
-    LineChart chart;
+    ScatterChart chart;
     int[] xCoords;
     int[] yCoords;
     TextView chartTitle;
@@ -88,7 +91,7 @@ public class ExerciseFeedbackActivity extends Activity implements AdapterView.On
 
     private void createChart(List<Entry> entries, String _chartName){
             // create new data set
-            LineDataSet dataSet = new LineDataSet(entries, _chartName);
+            ScatterDataSet dataSet = new ScatterDataSet(entries, _chartName);
             dataSet.setColor(Color.parseColor("#701112"));
             dataSet.setValueTextColor(Color.parseColor("#FFFFFF"));
 
@@ -103,8 +106,12 @@ public class ExerciseFeedbackActivity extends Activity implements AdapterView.On
             yAxisRight.setEnabled(false);
 
             // add data set to line chart
-            LineData lineData = new LineData(dataSet);
-            chart.setData(lineData);
+            ScatterData scatterData = new ScatterData(dataSet);
+            chart.setData(scatterData);
+            chart.setVisibleXRangeMaximum(5);
+            chart.getXAxis().setDrawGridLines(false);
+            chart.getAxisLeft().setDrawGridLines(false);
+            chart.getAxisRight().setDrawGridLines(false);
             // refresh
             chart.invalidate();
     }
