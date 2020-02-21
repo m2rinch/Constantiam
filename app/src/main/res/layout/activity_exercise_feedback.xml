@@ -34,10 +34,37 @@
 
     <com.github.mikephil.charting.charts.ScatterChart
         android:id="@+id/feedbackChart"
-        android:layout_width="match_parent"
+        android:layout_width="200dp"
         android:layout_height="100dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
+        android:background="@drawable/shoeprint"
         app:layout_constraintTop_toBottomOf="@+id/feedbackChartTitle" />
+    <ImageView
+        android:id="@+id/overlay"
+        android:layout_width="200dp"
+        android:layout_height="170dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:background="@drawable/shoeprint_right_trans"
+        app:layout_constraintTop_toTopOf="@id/feedbackChart"/>
+    <ImageView
+        android:id="@+id/overlayLeft"
+        android:layout_width="200dp"
+        android:layout_height="170dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:background="@drawable/shoeprint_left_trans"
+        app:layout_constraintTop_toTopOf="@id/feedbackChart"/>
+
+    <SeekBar
+        android:id="@+id/seekBar"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@+id/feedbackChart"
+        android:paddingRight="10dp"
+        android:paddingLeft="10dp"
+        android:layout_marginTop="10dp"
+        android:max="10"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

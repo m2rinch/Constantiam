@@ -6,6 +6,8 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
+import android.widget.SeekBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -31,19 +33,25 @@ import androidx.appcompat.app.AppCompatActivity;
 
 public class ExerciseFeedbackActivity extends Activity implements AdapterView.OnItemSelectedListener {
 
-    Spinner chartSpinner;
+    Spinner spinner;
     ScatterChart chart;
     int[] xCoords;
     int[] yCoords;
     TextView chartTitle;
+    SeekBar seekBar;
     String chartName;
+    ImageView rightFoot;
+    ImageView leftFoot;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_exercise_feedback);
         chartTitle = findViewById(R.id.feedbackChartTitle);
-        Spinner spinner = findViewById(R.id.chartSpinner);
+        rightFoot = findViewById(R.id.overlay);
+        leftFoot = findViewById(R.id.overlayLeft);
+        spinner = findViewById(R.id.chartSpinner);
+        seekBar = findViewById(R.id.seekBar);
         // Create an ArrayAdapter using the string array and a default spinner layout
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
         R.array.charts_array, android.R.layout.simple_spinner_item);
@@ -52,6 +60,28 @@ public class ExerciseFeedbackActivity extends Activity implements AdapterView.On
         // Apply the adapter to the spinner
         spinner.setAdapter(adapter);
         spinner.setOnItemSelectedListener(this);
+
+        seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            int progress = 0;
+
+
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progressValue, boolean fromUser) {
+                progress = progressValue;
+                int alpha = seekBar.getProgress();
+                chart.centerViewTo(progress, yCoords[progress], YAxis.AxisDependency.LEFT);
+                rightFoot.getBackground().setAlpha(alpha*25);
+                leftFoot.getBackground().setAlpha(255-(alpha*25));
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+            }
+        });
     }
 
     private List<Entry> getChartData(int _pos) {
@@ -108,7 +138,7 @@ public class ExerciseFeedbackActivity extends Activity implements AdapterView.On
             // add data set to line chart
             ScatterData scatterData = new ScatterData(dataSet);
             chart.setData(scatterData);
-            chart.setVisibleXRangeMaximum(5);
+            chart.setVisibleXRangeMaximum(1);
             chart.getXAxis().setDrawGridLines(false);
             chart.getAxisLeft().setDrawGridLines(false);
             chart.getAxisRight().setDrawGridLines(false);
@@ -126,9 +156,9 @@ public class ExerciseFeedbackActivity extends Activity implements AdapterView.On
         return intData;
     }
 
-    private int[] generateTimePoints(int[] _yData){
+    private int[] generateTimePoints(int[] _yData) {
         int[] timeData = new int[_yData.length];
-        for(int i = 0; i < _yData.length; i++){
+        for (int i = 0; i < _yData.length; i++) {
             timeData[i] = i;
         }
         return timeData;
@@ -143,7 +173,7 @@ public class ExerciseFeedbackActivity extends Activity implements AdapterView.On
         List<Entry> entries = getChartData(pos);
         if(entries != null){
             createChart(entries, chartName);
-            Toast.makeText(getApplicationContext(), chartName, Toast.LENGTH_LONG).show();
+            //Toast.makeText(getApplicationContext(), chartName, Toast.LENGTH_LONG).show();
         }
     }
 
