@@ -25,107 +25,173 @@ public class Session implements Serializable {
     @com.google.gson.annotations.SerializedName("keychar_id")
     private int mKeyCharId;
 
-    @com.google.gson.annotations.SerializedName("cop_right")
-    private String mCOPRight;
+    @com.google.gson.annotations.SerializedName("cop_right_x")
+    private String mCOPRightX;
 
-    @com.google.gson.annotations.SerializedName("cop_left")
-    private String mCOPLeft;
+    @com.google.gson.annotations.SerializedName("cop_left_x")
+    private String mCOPLeftX;
 
-    @com.google.gson.annotations.SerializedName("cop_overall")
-    private String mCOPOverall;
+    @com.google.gson.annotations.SerializedName("cop_overall_x")
+    private String mCOPOverallX;
+
+    @com.google.gson.annotations.SerializedName("cop_right_y")
+    private String mCOPRightY;
+
+    @com.google.gson.annotations.SerializedName("cop_left_y")
+    private String mCOPLeftY;
+
+    @com.google.gson.annotations.SerializedName("cop_overall_y")
+    private String mCOPOverallY;
+
+    @com.google.gson.annotations.SerializedName("variability_x")
+    private String variabilityX;
+
+    @com.google.gson.annotations.SerializedName("variability_y")
+    private String variabilityY;
+
+    @com.google.gson.annotations.SerializedName("force_right")
+    private String forceRight;
+
+    @com.google.gson.annotations.SerializedName("force_left")
+    private String forceLeft;
 
     @com.google.gson.annotations.SerializedName("si")
     private String mSI;
 
-    @com.google.gson.annotations.SerializedName("suggestions")
-    private String mSuggestions;
-
-    public int getId() {
+    public int getmId() {
         return mId;
     }
 
-    public void setId(int mId) {
+    public void setmId(int mId) {
         this.mId = mId;
     }
 
-    public String getCreatedAt() {
-        return mCreatedAt;
-    }
-
-    public void setCreatedAt(String mCreatedAt) {
-        this.mCreatedAt = mCreatedAt;
-    }
-
-    public int getUserId() {
+    public int getmUserId() {
         return mUserId;
     }
 
-    public void setUserId(int mUserId) {
+    public void setmUserId(int mUserId) {
         this.mUserId = mUserId;
     }
 
-    public int getExerciseId() {
+    public int getmExerciseId() {
         return mExerciseId;
     }
 
-    public void setExerciseId(int mExerciseId) {
+    public void setmExerciseId(int mExerciseId) {
         this.mExerciseId = mExerciseId;
     }
 
-    public double getWeight() {
+    public double getmWeight() {
         return mWeight;
     }
 
-    public void setWeight(double mWeight) {
+    public void setmWeight(double mWeight) {
         this.mWeight = mWeight;
     }
 
-    public double getDuration() {
+    public double getmDuration() {
         return mDuration;
     }
 
-    public void setDuration(double mDuration) {
+    public void setmDuration(double mDuration) {
         this.mDuration = mDuration;
     }
 
-    public int getKeyCharId() {
+    public String getmCreatedAt() {
+        return mCreatedAt;
+    }
+
+    public void setmCreatedAt(String mCreatedAt) {
+        this.mCreatedAt = mCreatedAt;
+    }
+
+    public int getmKeyCharId() {
         return mKeyCharId;
     }
 
-    public void setKeyCharId(int mKeyCharId) {
+    public void setmKeyCharId(int mKeyCharId) {
         this.mKeyCharId = mKeyCharId;
     }
 
-    public String getSuggestions() {
-        return mSuggestions;
+    public String getmCOPRightX() {
+        return mCOPRightX;
     }
 
-    public void setSuggestions(String mSuggestions) {
-        this.mSuggestions = mSuggestions;
+    public void setmCOPRightX(String mCOPRightX) {
+        this.mCOPRightX = mCOPRightX;
     }
 
-    public String getmCOPRight() {
-        return mCOPRight;
+    public String getmCOPLeftX() {
+        return mCOPLeftX;
     }
 
-    public void setmCOPRight(String mCOPRight) {
-        this.mCOPRight = mCOPRight;
+    public void setmCOPLeftX(String mCOPLeftX) {
+        this.mCOPLeftX = mCOPLeftX;
     }
 
-    public String getmCOPLeft() {
-        return mCOPLeft;
+    public String getmCOPOverallX() {
+        return mCOPOverallX;
     }
 
-    public void setmCOPLeft(String mCOPLeft) {
-        this.mCOPLeft = mCOPLeft;
+    public void setmCOPOverallX(String mCOPOverallX) {
+        this.mCOPOverallX = mCOPOverallX;
     }
 
-    public String getmCOPOverall() {
-        return mCOPOverall;
+    public String getmCOPRightY() {
+        return mCOPRightY;
     }
 
-    public void setmCOPOverall(String mCOPOverall) {
-        this.mCOPOverall = mCOPOverall;
+    public void setmCOPRightY(String mCOPRightY) {
+        this.mCOPRightY = mCOPRightY;
+    }
+
+    public String getmCOPLeftY() {
+        return mCOPLeftY;
+    }
+
+    public void setmCOPLeftY(String mCOPLeftY) {
+        this.mCOPLeftY = mCOPLeftY;
+    }
+
+    public String getmCOPOverallY() {
+        return mCOPOverallY;
+    }
+
+    public void setmCOPOverallY(String mCOPOverallY) {
+        this.mCOPOverallY = mCOPOverallY;
+    }
+
+    public String getVariabilityX() {
+        return variabilityX;
+    }
+
+    public void setVariabilityX(String variabilityX) {
+        this.variabilityX = variabilityX;
+    }
+
+    public String getVariabilityY() {
+        return variabilityY;
+    }
+
+    public void setVariabilityY(String variabilityY) {
+        this.variabilityY = variabilityY;
+    }
+
+    public String getForceRight() {
+        return forceRight;
+    }
+
+    public void setForceRight(String forceRight) {
+        this.forceRight = forceRight;
+    }
+
+    public String getForceLeft() {
+        return forceLeft;
+    }
+
+    public void setForceLeft(String forceLeft) {
+        this.forceLeft = forceLeft;
     }
 
     public String getmSI() {

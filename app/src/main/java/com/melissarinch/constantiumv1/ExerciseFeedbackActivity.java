@@ -91,19 +91,19 @@ public class ExerciseFeedbackActivity extends Activity implements AdapterView.On
 
             switch(_pos) {
                 case 0:
-                    yCoords = parseData(session.getmCOPOverall());
+                    yCoords = parseData(session.getmCOPOverallY());
                     break;
                 case 1:
-                    yCoords = parseData(session.getmCOPRight());
+                    yCoords = parseData(session.getmCOPRightY());
                     break;
                 case 2:
-                    yCoords = parseData(session.getmCOPLeft());
+                    yCoords = parseData(session.getmCOPLeftY());
                     break;
                 case 3:
                     yCoords = parseData(session.getmSI());
                     break;
                 default:
-                    yCoords = parseData(session.getmCOPOverall());
+                    yCoords = parseData(session.getmCOPOverallY());
             }
             xCoords = generateTimePoints(yCoords);
             // Create Feedback Chart
