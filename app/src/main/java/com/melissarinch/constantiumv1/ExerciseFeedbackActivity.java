@@ -35,8 +35,8 @@ public class ExerciseFeedbackActivity extends Activity implements AdapterView.On
 
     Spinner spinner;
     ScatterChart chart;
-    int[] xCoords;
-    int[] yCoords;
+    double[] xCoords;
+    double[] yCoords;
     TextView chartTitle;
     SeekBar seekBar;
     String chartName;
@@ -69,7 +69,7 @@ public class ExerciseFeedbackActivity extends Activity implements AdapterView.On
             public void onProgressChanged(SeekBar seekBar, int progressValue, boolean fromUser) {
                 progress = progressValue;
                 int alpha = seekBar.getProgress();
-                chart.centerViewTo(progress, yCoords[progress], YAxis.AxisDependency.LEFT);
+                chart.centerViewTo(progress, (float)yCoords[progress], YAxis.AxisDependency.LEFT);
                 rightFoot.getBackground().setAlpha(alpha*25);
                 leftFoot.getBackground().setAlpha(255-(alpha*25));
             }
@@ -112,7 +112,7 @@ public class ExerciseFeedbackActivity extends Activity implements AdapterView.On
             // add data points to Entry object
             List<Entry> entries = new ArrayList<Entry>();
             for (int i = 0; i < xCoords.length; i++) {
-                entries.add(new Entry(xCoords[i], yCoords[i]));
+                entries.add(new Entry((float)xCoords[i], (float)yCoords[i]));
             }
             return entries;
         }
@@ -145,19 +145,19 @@ public class ExerciseFeedbackActivity extends Activity implements AdapterView.On
             // refresh
             chart.invalidate();
     }
-    private int[] parseData(String _responseData){
+    private double[] parseData(String _responseData){
         // string split on comma
         String[] stringData = _responseData.split(",");
         // convert to int array
-        int[] intData = new int[stringData.length];
+        double[] chartData = new double[stringData.length];
         for(int i = 0; i < stringData.length; i++){
-            intData[i] = Integer.parseInt(stringData[i]);
+            chartData[i] = Double.parseDouble(stringData[i]);
         }
-        return intData;
+        return chartData;
     }
 
-    private int[] generateTimePoints(int[] _yData) {
-        int[] timeData = new int[_yData.length];
+    private double[] generateTimePoints(double[] _yData) {
+        double[] timeData = new double[_yData.length];
         for (int i = 0; i < _yData.length; i++) {
             timeData[i] = i;
         }
