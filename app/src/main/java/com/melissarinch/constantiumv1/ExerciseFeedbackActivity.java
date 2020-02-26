@@ -10,11 +10,9 @@ import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.charts.ScatterChart;
-import com.github.mikephil.charting.components.Description;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.Entry;
@@ -25,18 +23,18 @@ import com.github.mikephil.charting.data.ScatterDataSet;
 import com.melissarinch.constantiumv1.data.Session;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-
-import androidx.appcompat.app.AppCompatActivity;
 
 
 public class ExerciseFeedbackActivity extends Activity implements AdapterView.OnItemSelectedListener {
 
     Spinner spinner;
     ScatterChart chart;
+    LineChart varChart;
     double[] xCoords;
     double[] yCoords;
+    double[] xCoordsV;
+    double[] yCoordsV;
     TextView chartTitle;
     SeekBar seekBar;
     String chartName;
@@ -52,6 +50,7 @@ public class ExerciseFeedbackActivity extends Activity implements AdapterView.On
         leftFoot = findViewById(R.id.overlayLeft);
         spinner = findViewById(R.id.chartSpinner);
         seekBar = findViewById(R.id.seekBar);
+        varChart = findViewById(R.id.variabilityChart);
         // Create an ArrayAdapter using the string array and a default spinner layout
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
         R.array.charts_array, android.R.layout.simple_spinner_item);
@@ -84,7 +83,7 @@ public class ExerciseFeedbackActivity extends Activity implements AdapterView.On
         });
     }
 
-    private List<Entry> getChartData(int _pos) {
+    private void setChartData(int _pos) {
         if (getIntent().hasExtra("Session")) {
 
             Session session = (Session) getIntent().getSerializableExtra("Session");
@@ -92,31 +91,35 @@ public class ExerciseFeedbackActivity extends Activity implements AdapterView.On
             switch(_pos) {
                 case 0:
                     yCoords = parseData(session.getmCOPOverallY());
+                    yCoordsV = parseData(session.getVariabilityY());
                     break;
                 case 1:
                     yCoords = parseData(session.getmCOPRightY());
+                    yCoordsV = parseData(session.getVariabilityY());
                     break;
                 case 2:
                     yCoords = parseData(session.getmCOPLeftY());
-                    break;
-                case 3:
-                    yCoords = parseData(session.getmSI());
+                    yCoordsV = parseData(session.getVariabilityY());
                     break;
                 default:
                     yCoords = parseData(session.getmCOPOverallY());
+                    yCoordsV = parseData(session.getVariabilityY());
             }
             xCoords = generateTimePoints(yCoords);
+            xCoordsV = generateTimePoints(yCoordsV);
             // Create Feedback Chart
             chart = findViewById(R.id.feedbackChart);
+            varChart = findViewById(R.id.variabilityChart);
 
-            // add data points to Entry object
-            List<Entry> entries = new ArrayList<Entry>();
-            for (int i = 0; i < xCoords.length; i++) {
-                entries.add(new Entry((float)xCoords[i], (float)yCoords[i]));
-            }
-            return entries;
         }
-        return null;
+    }
+
+    private List<Entry> getEntries(double[] xCoords, double[] yCoords) {
+        List<Entry> entries = new ArrayList<>();
+        for (int i = 0; i < xCoords.length; i++) {
+            entries.add(new Entry((float)xCoords[i], (float)yCoords[i]));
+        }
+        return entries;
     }
 
     private void createChart(List<Entry> entries, String _chartName){
@@ -145,6 +148,29 @@ public class ExerciseFeedbackActivity extends Activity implements AdapterView.On
             // refresh
             chart.invalidate();
     }
+
+    private void createVarChart(List<Entry> entries, String _chartName){
+        // create new data set
+        LineDataSet dataSet = new LineDataSet(entries, _chartName);
+        dataSet.setColor(Color.parseColor("#701112"));
+        dataSet.setValueTextColor(Color.parseColor("#FFFFFF"));
+
+        // modify x-axis
+        XAxis xAxis = chart.getXAxis();
+        xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
+        xAxis.setGranularityEnabled(true); // prevent x-axis duplicates
+        // xAxis.setValueFormatter(new WeekLineChart());
+
+        // modify y-axis
+        YAxis yAxisRight = chart.getAxisRight();
+        yAxisRight.setEnabled(false);
+
+        // add data set to line chart
+        LineData lineData = new LineData(dataSet);
+        varChart.setData(lineData);
+        // refresh
+        chart.invalidate();
+    }
     private double[] parseData(String _responseData){
         // string split on comma
         String[] stringData = _responseData.split(",");
@@ -170,9 +196,12 @@ public class ExerciseFeedbackActivity extends Activity implements AdapterView.On
         chartName = parent.getItemAtPosition(pos).toString();
         chartTitle.setText(chartName);
         //getChartData will only return info is session has been populated
-        List<Entry> entries = getChartData(pos);
-        if(entries != null){
+        setChartData(pos);
+        List<Entry> entries = getEntries(xCoords, yCoords);
+        List<Entry> varEntries = getEntries(xCoordsV, yCoordsV);
+        if(entries != null & varEntries != null){
             createChart(entries, chartName);
+            createVarChart(varEntries, chartName);
             //Toast.makeText(getApplicationContext(), chartName, Toast.LENGTH_LONG).show();
         }
     }
