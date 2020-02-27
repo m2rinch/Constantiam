@@ -64,7 +64,6 @@
         android:layout_height="170dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        android:background="@drawable/shoeprint_right_trans"
         app:layout_constraintTop_toTopOf="@id/feedbackChart"/>
     <ImageView
         android:id="@+id/overlayLeft"
@@ -72,7 +71,6 @@
         android:layout_height="170dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        android:background="@drawable/shoeprint_left_trans"
         app:layout_constraintTop_toTopOf="@id/feedbackChart"/>
 
     <SeekBar

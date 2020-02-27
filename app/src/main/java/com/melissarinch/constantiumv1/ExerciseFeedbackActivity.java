@@ -69,8 +69,8 @@ public class ExerciseFeedbackActivity extends Activity implements AdapterView.On
                 progress = progressValue;
                 int alpha = seekBar.getProgress();
                 chart.centerViewTo(progress, (float)yCoords[progress], YAxis.AxisDependency.LEFT);
-                rightFoot.getBackground().setAlpha(alpha*25);
-                leftFoot.getBackground().setAlpha(255-(alpha*25));
+              //  rightFoot.getBackground().setAlpha(alpha*25);
+               // leftFoot.getBackground().setAlpha(255-(alpha*25));
             }
 
             @Override
@@ -87,29 +87,33 @@ public class ExerciseFeedbackActivity extends Activity implements AdapterView.On
         if (getIntent().hasExtra("Session")) {
 
             Session session = (Session) getIntent().getSerializableExtra("Session");
-
+            chart = findViewById(R.id.feedbackChart);
+            varChart = findViewById(R.id.variabilityChart);
             switch(_pos) {
                 case 0:
                     yCoords = parseData(session.getmCOPOverallY());
                     yCoordsV = parseData(session.getVariabilityOverall());
+                    chart.setBackgroundResource(R.drawable.shoeprint);
                     break;
                 case 1:
                     yCoords = parseData(session.getmCOPRightY());
                     yCoordsV = parseData(session.getVariabilityRight());
+                    chart.setBackgroundResource(R.drawable.right_shoe);
                     break;
                 case 2:
                     yCoords = parseData(session.getmCOPLeftY());
                     yCoordsV = parseData(session.getVariabilityLeft());
+                    chart.setBackgroundResource(R.drawable.left_shoe);
                     break;
                 default:
                     yCoords = parseData(session.getmCOPOverallY());
                     yCoordsV = parseData(session.getVariabilityLeft());
+                    chart.setBackgroundResource(R.drawable.shoeprint);
             }
             xCoords = generateTimePoints(yCoords);
             xCoordsV = generateTimePoints(yCoordsV);
             // Create Feedback Chart
-            chart = findViewById(R.id.feedbackChart);
-            varChart = findViewById(R.id.variabilityChart);
+
 
         }
     }
