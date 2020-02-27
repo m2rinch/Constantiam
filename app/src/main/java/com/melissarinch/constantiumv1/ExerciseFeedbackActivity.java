@@ -75,10 +75,14 @@ public class ExerciseFeedbackActivity extends Activity implements AdapterView.On
             public void onProgressChanged(SeekBar seekBar, int progressValue, boolean fromUser) {
                 progress = progressValue;
                 chart.centerViewTo(progress, (float)yCoords[progress], YAxis.AxisDependency.LEFT);
-                rightText.setText(String.valueOf(progress) + '%');
-                leftText.setText(String.valueOf(progress)+ '%');
-                rightFoot.getBackground().setAlpha((int)(rightForce[progress]*100));
-                leftFoot.getBackground().setAlpha((int)(leftForce[progress]*100));
+                int rightProgress = calculateProgress(progress, "right");
+                int leftProgress = calculateProgress(progress, "left");
+                rightText.setText(String.valueOf(rightProgress) + '%');
+                leftText.setText(String.valueOf(leftProgress) + '%');
+                int alphaR = (int)(((double)rightProgress/100)*255);
+                int alphaL = (int)(((double)leftProgress/100)*255);
+                rightFoot.getBackground().setAlpha(alphaR);
+                leftFoot.getBackground().setAlpha(alphaL);
             }
 
             @Override
@@ -91,6 +95,12 @@ public class ExerciseFeedbackActivity extends Activity implements AdapterView.On
         });
     }
 
+    private int calculateProgress(int pos, String foot) {
+        if(String.valueOf(foot) == "right") {
+            return (int)((double)Math.abs(rightForce[pos]) / ((double)Math.abs(rightForce[pos]) + Math.abs(leftForce[pos])) * 100);
+        }
+        return (int)(Math.abs(leftForce[pos]) / (Math.abs(rightForce[pos]) + Math.abs(leftForce[pos])) * 100);
+    }
     private void setChartData(int _pos, Session _session) {
 
             chart = findViewById(R.id.feedbackChart);
@@ -111,15 +121,13 @@ public class ExerciseFeedbackActivity extends Activity implements AdapterView.On
                     yCoords = parseData(_session.getmCOPRightY());
                     yCoordsV = parseData(_session.getVariabilityRight());
                     chart.setBackgroundResource(R.drawable.right_shoe);
-                    rightFoot.setVisibility(View.GONE);
-                    leftFoot.setVisibility(View.GONE);
+                    hideValues();
                     break;
                 case 2:
                     yCoords = parseData(_session.getmCOPLeftY());
                     yCoordsV = parseData(_session.getVariabilityLeft());
                     chart.setBackgroundResource(R.drawable.left_shoe);
-                    rightFoot.setVisibility(View.GONE);
-                    leftFoot.setVisibility(View.GONE);
+                    hideValues();
                     break;
                 default:
                     yCoords = parseData(_session.getmCOPOverallY());
@@ -133,6 +141,12 @@ public class ExerciseFeedbackActivity extends Activity implements AdapterView.On
             // Create Feedback Chart
     }
 
+    private void hideValues(){
+        rightFoot.setVisibility(View.GONE);
+        leftFoot.setVisibility(View.GONE);
+        rightText.setVisibility(View.GONE);
+        leftText.setVisibility(View.GONE);
+    }
     private List<Entry> getEntries(double[] xCoords, double[] yCoords) {
         List<Entry> entries = new ArrayList<>();
         for (int i = 0; i < xCoords.length; i++) {
