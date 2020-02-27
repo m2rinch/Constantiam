@@ -35,11 +35,14 @@ public class ExerciseFeedbackActivity extends Activity implements AdapterView.On
     double[] yCoords;
     double[] xCoordsV;
     double[] yCoordsV;
+    double[] rightForce;
+    double[] leftForce;
     TextView chartTitle;
     SeekBar seekBar;
     String chartName;
     ImageView rightFoot;
     ImageView leftFoot;
+    Session session;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,10 +70,9 @@ public class ExerciseFeedbackActivity extends Activity implements AdapterView.On
             @Override
             public void onProgressChanged(SeekBar seekBar, int progressValue, boolean fromUser) {
                 progress = progressValue;
-                int alpha = seekBar.getProgress();
                 chart.centerViewTo(progress, (float)yCoords[progress], YAxis.AxisDependency.LEFT);
-              //  rightFoot.getBackground().setAlpha(alpha*25);
-               // leftFoot.getBackground().setAlpha(255-(alpha*25));
+                rightFoot.getBackground().setAlpha((int)(rightForce[progress]*100));
+                leftFoot.getBackground().setAlpha((int)(leftForce[progress]*100));
             }
 
             @Override
@@ -83,39 +85,46 @@ public class ExerciseFeedbackActivity extends Activity implements AdapterView.On
         });
     }
 
-    private void setChartData(int _pos) {
-        if (getIntent().hasExtra("Session")) {
+    private void setChartData(int _pos, Session _session) {
 
-            Session session = (Session) getIntent().getSerializableExtra("Session");
             chart = findViewById(R.id.feedbackChart);
             varChart = findViewById(R.id.variabilityChart);
+            rightForce = parseData(_session.getmCOPRightY());
+            leftForce = parseData(_session.getmCOPLeftY());
             switch(_pos) {
                 case 0:
-                    yCoords = parseData(session.getmCOPOverallY());
-                    yCoordsV = parseData(session.getVariabilityOverall());
+                    yCoords = parseData(_session.getmCOPOverallY());
+                    yCoordsV = parseData(_session.getVariabilityOverall());
                     chart.setBackgroundResource(R.drawable.shoeprint);
+                    rightFoot.setBackgroundResource(R.drawable.shoeprint_right_trans);
+                    leftFoot.setBackgroundResource(R.drawable.shoeprint_left_trans);
+                    rightFoot.setVisibility(View.VISIBLE);
+                    leftFoot.setVisibility(View.VISIBLE);
                     break;
                 case 1:
-                    yCoords = parseData(session.getmCOPRightY());
-                    yCoordsV = parseData(session.getVariabilityRight());
+                    yCoords = parseData(_session.getmCOPRightY());
+                    yCoordsV = parseData(_session.getVariabilityRight());
                     chart.setBackgroundResource(R.drawable.right_shoe);
+                    rightFoot.setVisibility(View.GONE);
+                    leftFoot.setVisibility(View.GONE);
                     break;
                 case 2:
-                    yCoords = parseData(session.getmCOPLeftY());
-                    yCoordsV = parseData(session.getVariabilityLeft());
+                    yCoords = parseData(_session.getmCOPLeftY());
+                    yCoordsV = parseData(_session.getVariabilityLeft());
                     chart.setBackgroundResource(R.drawable.left_shoe);
+                    rightFoot.setVisibility(View.GONE);
+                    leftFoot.setVisibility(View.GONE);
                     break;
                 default:
-                    yCoords = parseData(session.getmCOPOverallY());
-                    yCoordsV = parseData(session.getVariabilityLeft());
+                    yCoords = parseData(_session.getmCOPOverallY());
+                    yCoordsV = parseData(_session.getVariabilityLeft());
                     chart.setBackgroundResource(R.drawable.shoeprint);
+                    rightFoot.setVisibility(View.VISIBLE);
+                    leftFoot.setVisibility(View.VISIBLE);
             }
             xCoords = generateTimePoints(yCoords);
             xCoordsV = generateTimePoints(yCoordsV);
             // Create Feedback Chart
-
-
-        }
     }
 
     private List<Entry> getEntries(double[] xCoords, double[] yCoords) {
@@ -139,16 +148,19 @@ public class ExerciseFeedbackActivity extends Activity implements AdapterView.On
             // xAxis.setValueFormatter(new WeekLineChart());
 
             // modify y-axis
-            YAxis yAxisRight = chart.getAxisRight();
-            yAxisRight.setEnabled(false);
+            chart.getAxisRight().setEnabled(false);
+            YAxis yAxis = chart.getAxisLeft();
 
             // add data set to line chart
             ScatterData scatterData = new ScatterData(dataSet);
             chart.setData(scatterData);
             chart.setVisibleXRangeMaximum(1);
             chart.getXAxis().setDrawGridLines(false);
-            chart.getAxisLeft().setDrawGridLines(false);
+            yAxis.setDrawGridLines(false);
+            yAxis.setAxisMinimum((float)-1);
+            yAxis.setAxisMaximum((float)1);
             chart.getAxisRight().setDrawGridLines(false);
+            chart.setScaleEnabled(false);
             // refresh
             chart.notifyDataSetChanged();
             chart.invalidate();
@@ -201,8 +213,13 @@ public class ExerciseFeedbackActivity extends Activity implements AdapterView.On
         // An item was selected. You can retrieve the selected item using
         chartName = parent.getItemAtPosition(pos).toString();
         chartTitle.setText(chartName);
+        if (getIntent().hasExtra("Session")) {
+            session = (Session) getIntent().getSerializableExtra("Session");
+            setChartData(pos, session);
+        }
         //getChartData will only return info is session has been populated
-        setChartData(pos);
+
+
         List<Entry> entries = getEntries(xCoords, yCoords);
         List<Entry> varEntries = getEntries(xCoordsV, yCoordsV);
         if(entries != null & varEntries != null){
