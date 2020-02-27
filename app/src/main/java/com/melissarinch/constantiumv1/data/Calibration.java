@@ -17,12 +17,12 @@ public class Calibration {
         this.mExercise = mExercise;
     }
 
-    public KeyChar getmKeyChar() {
-        return mKeyChar;
+    public KeyCharDescription getmKeyCharDescription() {
+        return mKeyCharDescription;
     }
 
-    public void setmKeyChar(KeyChar mKeyChar) {
-        this.mKeyChar = mKeyChar;
+    public void setmKeyCharDescription(KeyCharDescription mKeyCharDescription) {
+        this.mKeyCharDescription = mKeyCharDescription;
     }
 
     public ConstantiamUser getmUser() {
@@ -34,7 +34,7 @@ public class Calibration {
     }
 
     private Exercise mExercise;
-    private KeyChar mKeyChar;
+    private KeyCharDescription mKeyCharDescription;
     private ConstantiamUser mUser;
 
     public int getId() {

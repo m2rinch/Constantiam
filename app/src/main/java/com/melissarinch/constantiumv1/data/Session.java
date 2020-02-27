@@ -22,9 +22,6 @@ public class Session implements Serializable {
     @com.google.gson.annotations.SerializedName("created_at")
     private String mCreatedAt;
 
-    @com.google.gson.annotations.SerializedName("keychar_id")
-    private int mKeyCharId;
-
     @com.google.gson.annotations.SerializedName("cop_right_x")
     private String mCOPRightX;
 
@@ -43,11 +40,14 @@ public class Session implements Serializable {
     @com.google.gson.annotations.SerializedName("cop_overall_y")
     private String mCOPOverallY;
 
-    @com.google.gson.annotations.SerializedName("variability_x")
-    private String variabilityX;
+    @com.google.gson.annotations.SerializedName("variability_overall")
+    private String variabilityOverall;
 
-    @com.google.gson.annotations.SerializedName("variability_y")
-    private String variabilityY;
+    @com.google.gson.annotations.SerializedName("variability_right")
+    private String variabilityRight;
+
+    @com.google.gson.annotations.SerializedName("variability_left")
+    private String variabilityLeft;
 
     @com.google.gson.annotations.SerializedName("force_right")
     private String forceRight;
@@ -106,14 +106,6 @@ public class Session implements Serializable {
         this.mCreatedAt = mCreatedAt;
     }
 
-    public int getmKeyCharId() {
-        return mKeyCharId;
-    }
-
-    public void setmKeyCharId(int mKeyCharId) {
-        this.mKeyCharId = mKeyCharId;
-    }
-
     public String getmCOPRightX() {
         return mCOPRightX;
     }
@@ -162,22 +154,6 @@ public class Session implements Serializable {
         this.mCOPOverallY = mCOPOverallY;
     }
 
-    public String getVariabilityX() {
-        return variabilityX;
-    }
-
-    public void setVariabilityX(String variabilityX) {
-        this.variabilityX = variabilityX;
-    }
-
-    public String getVariabilityY() {
-        return variabilityY;
-    }
-
-    public void setVariabilityY(String variabilityY) {
-        this.variabilityY = variabilityY;
-    }
-
     public String getForceRight() {
         return forceRight;
     }
@@ -200,5 +176,29 @@ public class Session implements Serializable {
 
     public void setmSI(String mSI) {
         this.mSI = mSI;
+    }
+
+    public String getVariabilityOverall() {
+        return variabilityOverall;
+    }
+
+    public void setVariabilityOverall(String variabilityOverall) {
+        this.variabilityOverall = variabilityOverall;
+    }
+
+    public String getVariabilityRight() {
+        return variabilityRight;
+    }
+
+    public void setVariabilityRight(String variabilityRight) {
+        this.variabilityRight = variabilityRight;
+    }
+
+    public String getVariabilityLeft() {
+        return variabilityLeft;
+    }
+
+    public void setVariabilityLeft(String variabilityLeft) {
+        this.variabilityLeft = variabilityLeft;
     }
 }

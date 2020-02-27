@@ -53,9 +53,9 @@ public class ExerciseFeedbackActivity extends Activity implements AdapterView.On
         varChart = findViewById(R.id.variabilityChart);
         // Create an ArrayAdapter using the string array and a default spinner layout
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
-        R.array.charts_array, android.R.layout.simple_spinner_item);
+        R.array.charts_array, R.layout.spinner_item);
         // Specify the layout to use when the list of choices appears
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+       // adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         // Apply the adapter to the spinner
         spinner.setAdapter(adapter);
         spinner.setOnItemSelectedListener(this);
@@ -91,19 +91,19 @@ public class ExerciseFeedbackActivity extends Activity implements AdapterView.On
             switch(_pos) {
                 case 0:
                     yCoords = parseData(session.getmCOPOverallY());
-                    yCoordsV = parseData(session.getVariabilityY());
+                    yCoordsV = parseData(session.getVariabilityOverall());
                     break;
                 case 1:
                     yCoords = parseData(session.getmCOPRightY());
-                    yCoordsV = parseData(session.getVariabilityY());
+                    yCoordsV = parseData(session.getVariabilityRight());
                     break;
                 case 2:
                     yCoords = parseData(session.getmCOPLeftY());
-                    yCoordsV = parseData(session.getVariabilityY());
+                    yCoordsV = parseData(session.getVariabilityLeft());
                     break;
                 default:
                     yCoords = parseData(session.getmCOPOverallY());
-                    yCoordsV = parseData(session.getVariabilityY());
+                    yCoordsV = parseData(session.getVariabilityLeft());
             }
             xCoords = generateTimePoints(yCoords);
             xCoordsV = generateTimePoints(yCoordsV);
@@ -146,6 +146,7 @@ public class ExerciseFeedbackActivity extends Activity implements AdapterView.On
             chart.getAxisLeft().setDrawGridLines(false);
             chart.getAxisRight().setDrawGridLines(false);
             // refresh
+            chart.notifyDataSetChanged();
             chart.invalidate();
     }
 
@@ -169,7 +170,8 @@ public class ExerciseFeedbackActivity extends Activity implements AdapterView.On
         LineData lineData = new LineData(dataSet);
         varChart.setData(lineData);
         // refresh
-        chart.invalidate();
+        varChart.notifyDataSetChanged();
+        varChart.invalidate();
     }
     private double[] parseData(String _responseData){
         // string split on comma

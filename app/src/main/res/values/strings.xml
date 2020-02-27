@@ -18,7 +18,7 @@
     <string name="calibration_last">Last Calibrated: </string>
     <string name="begin_calibration">Begin Calibration</string>
     <string name="reset_calibration">Reset Calibration?</string>
-    <string name="chart_selection_prompt">Please select the chart type from the dropdown</string>
+    <string name="chart_selection_prompt">Select Chart Type</string>
     <string-array name="charts_array">
         <item>Overall COP</item>
         <item>Right Foot COP</item>
