@@ -43,6 +43,8 @@ public class ExerciseFeedbackActivity extends Activity implements AdapterView.On
     ImageView rightFoot;
     ImageView leftFoot;
     Session session;
+    TextView rightText;
+    TextView leftText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,6 +56,8 @@ public class ExerciseFeedbackActivity extends Activity implements AdapterView.On
         spinner = findViewById(R.id.chartSpinner);
         seekBar = findViewById(R.id.seekBar);
         varChart = findViewById(R.id.variabilityChart);
+        rightText = findViewById(R.id.rightText);
+        leftText = findViewById(R.id.leftText);
         // Create an ArrayAdapter using the string array and a default spinner layout
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
         R.array.charts_array, R.layout.spinner_item);
@@ -71,6 +75,8 @@ public class ExerciseFeedbackActivity extends Activity implements AdapterView.On
             public void onProgressChanged(SeekBar seekBar, int progressValue, boolean fromUser) {
                 progress = progressValue;
                 chart.centerViewTo(progress, (float)yCoords[progress], YAxis.AxisDependency.LEFT);
+                rightText.setText(String.valueOf(progress) + '%');
+                leftText.setText(String.valueOf(progress)+ '%');
                 rightFoot.getBackground().setAlpha((int)(rightForce[progress]*100));
                 leftFoot.getBackground().setAlpha((int)(leftForce[progress]*100));
             }
@@ -95,7 +101,7 @@ public class ExerciseFeedbackActivity extends Activity implements AdapterView.On
                 case 0:
                     yCoords = parseData(_session.getmCOPOverallY());
                     yCoordsV = parseData(_session.getVariabilityOverall());
-                    chart.setBackgroundResource(R.drawable.shoeprint);
+                    chart.setBackgroundResource(R.drawable.shoeprint_col);
                     rightFoot.setBackgroundResource(R.drawable.shoeprint_right_trans);
                     leftFoot.setBackgroundResource(R.drawable.shoeprint_left_trans);
                     rightFoot.setVisibility(View.VISIBLE);

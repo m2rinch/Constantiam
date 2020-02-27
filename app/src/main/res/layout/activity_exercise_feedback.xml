@@ -65,6 +65,16 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@id/feedbackChart"/>
+        <TextView
+            android:id="@+id/rightText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="@id/overlay"
+            app:layout_constraintTop_toTopOf="@id/overlay"
+            android:layout_marginEnd="40dp"
+            android:layout_marginTop="20dp"
+            android:gravity="end"
+            android:textColor="#000000" />
     <ImageView
         android:id="@+id/overlayLeft"
         android:layout_width="200dp"
@@ -72,8 +82,19 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@id/feedbackChart"/>
+        <TextView
+            android:id="@+id/leftText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="@id/overlayLeft"
+            app:layout_constraintTop_toTopOf="@id/overlayLeft"
+            android:layout_marginStart="60dp"
+            android:layout_marginTop="20dp"
+            android:gravity="start"
+            android:textColor="#000000" />
 
-    <SeekBar
+
+        <SeekBar
         android:id="@+id/seekBar"
         android:layout_width="300dp"
         android:layout_height="wrap_content"
