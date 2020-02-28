@@ -1,5 +1,7 @@
 package com.melissarinch.constantiumv1.data;
 
+import java.util.List;
+
 public class KeyCharDescription {
     @com.google.gson.annotations.SerializedName("id")
     private int mId;
@@ -10,8 +12,19 @@ public class KeyCharDescription {
     @com.google.gson.annotations.SerializedName("suggestion_text")
     private String mSuggestion;
 
+    @com.google.gson.annotations.SerializedName("key_char")
+    private List<KeyCharObj> mKeyCharObj;
+
     public int getmId() {
         return mId;
+    }
+
+    public List<KeyCharObj> getmKeyCharObj() {
+        return mKeyCharObj;
+    }
+
+    public void setmKeyCharObj(List<KeyCharObj> mKeyCharObj) {
+        this.mKeyCharObj = mKeyCharObj;
     }
 
     public void setmId(int mId) {
