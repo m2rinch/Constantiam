@@ -20,6 +20,9 @@
     <string name="reset_calibration">Reset Calibration?</string>
     <string name="chart_selection_prompt">Select Chart Type</string>
     <string name="summary">SUMMARY</string>
+    <string name="checkbox_zones">display zones</string>
+    <string name="checkbox_error">display error bars</string>
+    <string name="checkbox_force">display force on foot</string>
     <string-array name="charts_array">
         <item>Overall COP</item>
         <item>Right Foot COP</item>

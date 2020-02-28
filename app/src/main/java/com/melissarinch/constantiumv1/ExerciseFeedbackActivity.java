@@ -6,6 +6,8 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.Spinner;
@@ -37,6 +39,8 @@ public class ExerciseFeedbackActivity extends Activity implements AdapterView.On
     double[] yCoordsV;
     double[] rightForce;
     double[] leftForce;
+    CheckBox forceCheck;
+    CheckBox zoneCheck;
     TextView chartTitle;
     SeekBar seekBar;
     String chartName;
@@ -45,6 +49,11 @@ public class ExerciseFeedbackActivity extends Activity implements AdapterView.On
     Session session;
     TextView rightText;
     TextView leftText;
+    enum footType {
+        RIGHT,
+        LEFT,
+        OVERALL
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,12 +67,35 @@ public class ExerciseFeedbackActivity extends Activity implements AdapterView.On
         varChart = findViewById(R.id.variabilityChart);
         rightText = findViewById(R.id.rightText);
         leftText = findViewById(R.id.leftText);
-        // Create an ArrayAdapter using the string array and a default spinner layout
+        forceCheck = findViewById(R.id.force_check);
+        zoneCheck = findViewById(R.id.zone_check);
+
+       forceCheck.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+           @Override
+           public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
+               if(isChecked){
+                   showForce(spinner.getSelectedItemPosition());
+               }
+               else {
+                   hideForce();
+               }
+           }
+       });
+
+        zoneCheck.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
+                if(isChecked){
+                    showZones(spinner.getSelectedItemPosition());
+                }
+                else {
+                    hideZones(spinner.getSelectedItemPosition());
+                }
+            }
+        });
+
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
         R.array.charts_array, R.layout.spinner_item);
-        // Specify the layout to use when the list of choices appears
-       // adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        // Apply the adapter to the spinner
         spinner.setAdapter(adapter);
         spinner.setOnItemSelectedListener(this);
 
@@ -75,8 +107,8 @@ public class ExerciseFeedbackActivity extends Activity implements AdapterView.On
             public void onProgressChanged(SeekBar seekBar, int progressValue, boolean fromUser) {
                 progress = progressValue;
                 chart.centerViewTo(progress, (float)yCoords[progress], YAxis.AxisDependency.LEFT);
-                int rightProgress = calculateProgress(progress, "right");
-                int leftProgress = calculateProgress(progress, "left");
+                int rightProgress = calculateProgress(progress, footType.RIGHT);
+                int leftProgress = calculateProgress(progress, footType.LEFT);
                 rightText.setText(String.valueOf(rightProgress) + '%');
                 leftText.setText(String.valueOf(leftProgress) + '%');
                 int alphaR = (int)(((double)rightProgress/100)*255);
@@ -95,8 +127,8 @@ public class ExerciseFeedbackActivity extends Activity implements AdapterView.On
         });
     }
 
-    private int calculateProgress(int pos, String foot) {
-        if(String.valueOf(foot) == "right") {
+    private int calculateProgress(int pos, footType _foot) {
+        if(_foot == footType.RIGHT) {
             return (int)((double)Math.abs(rightForce[pos]) / ((double)Math.abs(rightForce[pos]) + Math.abs(leftForce[pos])) * 100);
         }
         return (int)(Math.abs(leftForce[pos]) / (Math.abs(rightForce[pos]) + Math.abs(leftForce[pos])) * 100);
@@ -111,42 +143,28 @@ public class ExerciseFeedbackActivity extends Activity implements AdapterView.On
                 case 0:
                     yCoords = parseData(_session.getmCOPOverallY());
                     yCoordsV = parseData(_session.getVariabilityOverall());
-                    chart.setBackgroundResource(R.drawable.shoeprint_col);
-                    rightFoot.setBackgroundResource(R.drawable.shoeprint_right_trans);
-                    leftFoot.setBackgroundResource(R.drawable.shoeprint_left_trans);
-                    rightFoot.setVisibility(View.VISIBLE);
-                    leftFoot.setVisibility(View.VISIBLE);
+                    chart.setBackgroundResource(R.drawable.shoeprint);
                     break;
                 case 1:
                     yCoords = parseData(_session.getmCOPRightY());
                     yCoordsV = parseData(_session.getVariabilityRight());
                     chart.setBackgroundResource(R.drawable.right_shoe);
-                    hideValues();
                     break;
                 case 2:
                     yCoords = parseData(_session.getmCOPLeftY());
                     yCoordsV = parseData(_session.getVariabilityLeft());
                     chart.setBackgroundResource(R.drawable.left_shoe);
-                    hideValues();
                     break;
                 default:
                     yCoords = parseData(_session.getmCOPOverallY());
                     yCoordsV = parseData(_session.getVariabilityLeft());
                     chart.setBackgroundResource(R.drawable.shoeprint);
-                    rightFoot.setVisibility(View.VISIBLE);
-                    leftFoot.setVisibility(View.VISIBLE);
             }
             xCoords = generateTimePoints(yCoords);
             xCoordsV = generateTimePoints(yCoordsV);
             // Create Feedback Chart
     }
 
-    private void hideValues(){
-        rightFoot.setVisibility(View.GONE);
-        leftFoot.setVisibility(View.GONE);
-        rightText.setVisibility(View.GONE);
-        leftText.setVisibility(View.GONE);
-    }
     private List<Entry> getEntries(double[] xCoords, double[] yCoords) {
         List<Entry> entries = new ArrayList<>();
         for (int i = 0; i < xCoords.length; i++) {
@@ -238,6 +256,8 @@ public class ExerciseFeedbackActivity extends Activity implements AdapterView.On
             setChartData(pos, session);
         }
         //getChartData will only return info is session has been populated
+        zoneCheck.setChecked(false);
+        forceCheck.setChecked(false);
 
 
         List<Entry> entries = getEntries(xCoords, yCoords);
@@ -253,4 +273,60 @@ public class ExerciseFeedbackActivity extends Activity implements AdapterView.On
     public void onNothingSelected(AdapterView<?> adapterView) {
 
     }
+
+
+    public void showForce(int pos){
+        if(pos == 0) {
+            //replace image background depending on the selected chart
+            rightFoot.setBackgroundResource(R.drawable.shoeprint_right_trans);
+            leftFoot.setBackgroundResource(R.drawable.shoeprint_left_trans);
+            rightFoot.setVisibility(View.VISIBLE);
+            leftFoot.setVisibility(View.VISIBLE);
+            rightText.setVisibility(View.VISIBLE);
+            leftText.setVisibility(View.VISIBLE);
+        }
+    }
+
+    private void hideForce(){
+        rightFoot.setVisibility(View.GONE);
+        leftFoot.setVisibility(View.GONE);
+        rightText.setVisibility(View.GONE);
+        leftText.setVisibility(View.GONE);
+    }
+
+    private void showZones(int pos){
+        // delete variability from dataset
+
+        switch(pos) {
+            case 0:
+                chart.setBackgroundResource(R.drawable.shoeprint_col);
+                break;
+            case 1:
+                chart.setBackgroundResource(R.drawable.right_col);
+                hideForce();
+                break;
+            case 2:
+                chart.setBackgroundResource(R.drawable.left_col);
+                hideForce();
+                break;
+        }
+
+    }
+
+    private void hideZones(int pos) {
+        switch(pos) {
+            case 0:
+                chart.setBackgroundResource(R.drawable.shoeprint);
+                break;
+            case 1:
+                chart.setBackgroundResource(R.drawable.right_shoe);
+                hideForce();
+                break;
+            case 2:
+                chart.setBackgroundResource(R.drawable.left_shoe);
+                hideForce();
+                break;
+        }
+    }
+
 }
