@@ -17,6 +17,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.reflect.TypeToken;
 import com.melissarinch.constantiumv1.R;
 import com.melissarinch.constantiumv1.data.KeyCharDescription;
+import com.melissarinch.constantiumv1.data.Session;
 import com.microsoft.windowsazure.mobileservices.MobileServiceClient;
 
 import java.lang.reflect.Type;
@@ -33,6 +34,7 @@ public class SummaryActivity extends AppCompatActivity {
     private MobileServiceClient mClient;
     private String TAG = SummaryActivity.class.getName();
     private String URL = "http://constantiam.azurewebsites.net/";
+    Session session;
 
 
     @Override
@@ -42,6 +44,9 @@ public class SummaryActivity extends AppCompatActivity {
         keycharList = findViewById(R.id.keycharList);
         mKeyCharAdapter = new KeyCharAdapter(this,R.layout.row_keychar_list);
         keycharList.setAdapter(mKeyCharAdapter);
+        if (getIntent().hasExtra("Session")) {
+            session = (Session) getIntent().getSerializableExtra("Session");
+        }
         try {
             // update mExerciseJSON from by getting exercise list
             getStringFromAzure();
@@ -55,6 +60,7 @@ public class SummaryActivity extends AppCompatActivity {
 
     private void getStringFromAzure() throws MalformedURLException {
         mClient = new MobileServiceClient(URL, this);
+       // int sessionid = session.getmId();
         int sessionid = 1;
 
         ListenableFuture<JsonElement> query = mClient.invokeApi("KeyCharDescription/" + sessionid , null, GetMethod, null);

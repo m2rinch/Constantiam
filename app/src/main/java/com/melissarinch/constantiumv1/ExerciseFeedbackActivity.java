@@ -1,6 +1,7 @@
 package com.melissarinch.constantiumv1;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
@@ -32,7 +33,7 @@ public class ExerciseFeedbackActivity extends Activity implements AdapterView.On
 
     Spinner spinner;
     ScatterChart chart;
-    LineChart varChart;
+   // LineChart varChart;
     double[] xCoords;
     double[] yCoords;
     double[] xCoordsV;
@@ -64,7 +65,7 @@ public class ExerciseFeedbackActivity extends Activity implements AdapterView.On
         leftFoot = findViewById(R.id.overlayLeft);
         spinner = findViewById(R.id.chartSpinner);
         seekBar = findViewById(R.id.seekBar);
-        varChart = findViewById(R.id.variabilityChart);
+      //  varChart = findViewById(R.id.variabilityChart);
         rightText = findViewById(R.id.rightText);
         leftText = findViewById(R.id.leftText);
         forceCheck = findViewById(R.id.force_check);
@@ -136,7 +137,7 @@ public class ExerciseFeedbackActivity extends Activity implements AdapterView.On
     private void setChartData(int _pos, Session _session) {
 
             chart = findViewById(R.id.feedbackChart);
-            varChart = findViewById(R.id.variabilityChart);
+          //  varChart = findViewById(R.id.variabilityChart);
             rightForce = parseData(_session.getmCOPRightY());
             leftForce = parseData(_session.getmCOPLeftY());
             switch(_pos) {
@@ -222,10 +223,10 @@ public class ExerciseFeedbackActivity extends Activity implements AdapterView.On
 
         // add data set to line chart
         LineData lineData = new LineData(dataSet);
-        varChart.setData(lineData);
+       // varChart.setData(lineData);
         // refresh
-        varChart.notifyDataSetChanged();
-        varChart.invalidate();
+      //  varChart.notifyDataSetChanged();
+       // varChart.invalidate();
     }
     private double[] parseData(String _responseData){
         // string split on comma
@@ -327,6 +328,12 @@ public class ExerciseFeedbackActivity extends Activity implements AdapterView.On
                 hideForce();
                 break;
         }
+    }
+
+    public void viewSummary(View v){
+        Intent intent = new Intent(getApplicationContext(), SummaryActivity.class);
+        intent.putExtra("Session", session);
+        startActivity(intent);
     }
 
 }

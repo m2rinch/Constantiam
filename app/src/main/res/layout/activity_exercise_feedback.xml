@@ -111,7 +111,6 @@
             android:layout_height="wrap_content"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            android:padding="10dp"
             android:id="@+id/checkBoxLayout"
             app:layout_constraintTop_toBottomOf="@id/seekBar"
             android:orientation="vertical">
@@ -136,12 +135,14 @@
                     android:buttonTint="@color/darkGrey"
                     android:id="@+id/force_check" />
         </LinearLayout>
-    <com.github.mikephil.charting.charts.LineChart
-        android:id="@+id/variabilityChart"
-        android:layout_width="200dp"
-        android:layout_height="300dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/checkBoxLayout" />
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/summary"
+            app:layout_constraintTop_toBottomOf="@id/checkBoxLayout"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:onClick="viewSummary"
+            android:id="@+id/summaryButton" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>
