@@ -14,15 +14,15 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".SummaryActivity">
-        </activity>
-        <activity android:name=".CalibrationActivity"></activity>
-        <activity android:name=".BluetoothActivity"></activity>
-        <activity android:name=".SessionActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+        <activity android:name=".CalibrationActivity"></activity>
+        <activity android:name=".BluetoothActivity"></activity>
+        <activity android:name=".SessionActivity">
         </activity>
         <activity android:name=".FeedbackActivity" />
         <activity android:name=".SettingsActivity" />

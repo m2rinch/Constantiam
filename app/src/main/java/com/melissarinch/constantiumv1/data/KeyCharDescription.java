@@ -9,8 +9,19 @@ public class KeyCharDescription {
     @com.google.gson.annotations.SerializedName("description_text")
     private String mDescription;
 
+    @com.google.gson.annotations.SerializedName("img_name")
+    private String mImageName;
+
     @com.google.gson.annotations.SerializedName("suggestion_text")
     private String mSuggestion;
+
+    public String getmImageName() {
+        return mImageName;
+    }
+
+    public void setmImageName(String mImageName) {
+        this.mImageName = mImageName;
+    }
 
     @com.google.gson.annotations.SerializedName("key_char")
     private List<KeyCharObj> mKeyCharObj;

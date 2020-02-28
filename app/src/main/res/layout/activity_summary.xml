@@ -6,8 +6,29 @@
     android:layout_height="match_parent"
     tools:context=".SummaryActivity">
 
+    <include layout="@layout/titlebar"
+        android:id="@+id/titlebar"
+        app:layout_constraintTop_toTopOf="parent"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:id="@+id/summaryTitle"
+        android:text="@string/summary"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/titlebar"
+        android:layout_marginTop="10dp"
+        style="@style/exerciseNameStyle"
+        />
+
     <ListView
         android:id="@+id/keycharList"
+        app:layout_constraintTop_toBottomOf="@id/summaryTitle"
+        android:padding="10dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
     </ListView>

@@ -19,6 +19,7 @@
     <string name="begin_calibration">Begin Calibration</string>
     <string name="reset_calibration">Reset Calibration?</string>
     <string name="chart_selection_prompt">Select Chart Type</string>
+    <string name="summary">SUMMARY</string>
     <string-array name="charts_array">
         <item>Overall COP</item>
         <item>Right Foot COP</item>

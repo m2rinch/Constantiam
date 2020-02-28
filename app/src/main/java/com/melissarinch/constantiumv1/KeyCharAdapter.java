@@ -44,8 +44,10 @@ public class KeyCharAdapter extends ArrayAdapter<KeyCharDescription> {
             viewHolder = (ViewHolder)row.getTag();
         }
 
+        int resID = activity.getResources().getIdentifier( currentItem.getmImageName(), "drawable", activity.getPackageName());
+        viewHolder.keyCharImage.setImageResource(resID);
         viewHolder.keyChar.setText(currentItem.getmDescription());
-        viewHolder.suggestion.setText(currentItem.getmSuggestion());
+        viewHolder.suggestion.setText("  " + currentItem.getmSuggestion());
         return row;
     }
 
@@ -57,6 +59,7 @@ public class KeyCharAdapter extends ArrayAdapter<KeyCharDescription> {
 
         ViewHolder(View view)
         {
+            keyCharImage = view.findViewById(R.id.keycharImg);
             keyChar = view.findViewById(R.id.keychar);
             suggestion = view.findViewById(R.id.suggestion);
         }
