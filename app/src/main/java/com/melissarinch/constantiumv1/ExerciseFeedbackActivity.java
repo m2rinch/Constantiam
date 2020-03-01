@@ -23,9 +23,11 @@ import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.data.ScatterData;
 import com.github.mikephil.charting.data.ScatterDataSet;
+import com.github.mikephil.charting.utils.EntryXComparator;
 import com.melissarinch.constantiumv1.data.Session;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 
@@ -33,7 +35,8 @@ public class ExerciseFeedbackActivity extends Activity implements AdapterView.On
 
     Spinner spinner;
     ScatterChart chart;
-   // LineChart varChart;
+    ScatterData scatterData;
+    // LineChart varChart;
     double[] xCoords;
     double[] yCoords;
     double[] xCoordsV;
@@ -50,6 +53,8 @@ public class ExerciseFeedbackActivity extends Activity implements AdapterView.On
     Session session;
     TextView rightText;
     TextView leftText;
+    ScatterDataSet dataSet;
+    List<Entry> entries;
     enum footType {
         RIGHT,
         LEFT,
@@ -65,12 +70,12 @@ public class ExerciseFeedbackActivity extends Activity implements AdapterView.On
         leftFoot = findViewById(R.id.overlayLeft);
         spinner = findViewById(R.id.chartSpinner);
         seekBar = findViewById(R.id.seekBar);
-      //  varChart = findViewById(R.id.variabilityChart);
         rightText = findViewById(R.id.rightText);
         leftText = findViewById(R.id.leftText);
         forceCheck = findViewById(R.id.force_check);
         zoneCheck = findViewById(R.id.zone_check);
 
+        entries = new ArrayList<>();
        forceCheck.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
            @Override
            public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
@@ -100,6 +105,7 @@ public class ExerciseFeedbackActivity extends Activity implements AdapterView.On
         spinner.setAdapter(adapter);
         spinner.setOnItemSelectedListener(this);
 
+
         seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             int progress = 0;
 
@@ -107,15 +113,17 @@ public class ExerciseFeedbackActivity extends Activity implements AdapterView.On
             @Override
             public void onProgressChanged(SeekBar seekBar, int progressValue, boolean fromUser) {
                 progress = progressValue;
-                chart.centerViewTo(progress, (float)yCoords[progress], YAxis.AxisDependency.LEFT);
-                int rightProgress = calculateProgress(progress, footType.RIGHT);
-                int leftProgress = calculateProgress(progress, footType.LEFT);
-                rightText.setText(String.valueOf(rightProgress) + '%');
-                leftText.setText(String.valueOf(leftProgress) + '%');
-                int alphaR = (int)(((double)rightProgress/100)*255);
-                int alphaL = (int)(((double)leftProgress/100)*255);
-                rightFoot.getBackground().setAlpha(alphaR);
-                leftFoot.getBackground().setAlpha(alphaL);
+                chart.centerViewTo((float)xCoords[progress], (float)yCoords[progress], YAxis.AxisDependency.LEFT);
+                if(forceCheck.isChecked()){
+                    int rightProgress = calculateProgress(progress, footType.RIGHT);
+                    int leftProgress = calculateProgress(progress, footType.LEFT);
+                    rightText.setText(String.valueOf(rightProgress) + '%');
+                    leftText.setText(String.valueOf(leftProgress) + '%');
+                    int alphaR = (int)(((double)rightProgress/100)*255);
+                    int alphaL = (int)(((double)leftProgress/100)*255);
+                    rightFoot.getBackground().setAlpha(alphaR);
+                    leftFoot.getBackground().setAlpha(alphaL);
+                }
             }
 
             @Override
@@ -137,37 +145,30 @@ public class ExerciseFeedbackActivity extends Activity implements AdapterView.On
     private void setChartData(int _pos, Session _session) {
 
             chart = findViewById(R.id.feedbackChart);
-          //  varChart = findViewById(R.id.variabilityChart);
             rightForce = parseData(_session.getmCOPRightY());
             leftForce = parseData(_session.getmCOPLeftY());
             switch(_pos) {
                 case 0:
                     yCoords = parseData(_session.getmCOPOverallY());
-                    yCoordsV = parseData(_session.getVariabilityOverall());
+                    xCoords = parseData(_session.getmCOPOverallX());
                     chart.setBackgroundResource(R.drawable.shoeprint);
                     break;
                 case 1:
                     yCoords = parseData(_session.getmCOPRightY());
-                    yCoordsV = parseData(_session.getVariabilityRight());
+                    xCoords = parseData(_session.getmCOPRightX());
                     chart.setBackgroundResource(R.drawable.right_shoe);
                     break;
                 case 2:
                     yCoords = parseData(_session.getmCOPLeftY());
-                    yCoordsV = parseData(_session.getVariabilityLeft());
+                    xCoords = parseData(_session.getmCOPLeftX());
                     chart.setBackgroundResource(R.drawable.left_shoe);
                     break;
-                default:
-                    yCoords = parseData(_session.getmCOPOverallY());
-                    yCoordsV = parseData(_session.getVariabilityLeft());
-                    chart.setBackgroundResource(R.drawable.shoeprint);
             }
-            xCoords = generateTimePoints(yCoords);
-            xCoordsV = generateTimePoints(yCoordsV);
-            // Create Feedback Chart
+          //  xCoords = (generateTimePoints(yCoords));
     }
 
     private List<Entry> getEntries(double[] xCoords, double[] yCoords) {
-        List<Entry> entries = new ArrayList<>();
+        entries.clear();
         for (int i = 0; i < xCoords.length; i++) {
             entries.add(new Entry((float)xCoords[i], (float)yCoords[i]));
         }
@@ -176,7 +177,8 @@ public class ExerciseFeedbackActivity extends Activity implements AdapterView.On
 
     private void createChart(List<Entry> entries, String _chartName){
             // create new data set
-            ScatterDataSet dataSet = new ScatterDataSet(entries, _chartName);
+           // Collections.sort(entries, new EntryXComparator());
+            dataSet = new ScatterDataSet(entries, _chartName);
             dataSet.setColor(Color.parseColor("#701112"));
             dataSet.setValueTextColor(Color.parseColor("#FFFFFF"));
 
@@ -191,42 +193,24 @@ public class ExerciseFeedbackActivity extends Activity implements AdapterView.On
             YAxis yAxis = chart.getAxisLeft();
 
             // add data set to line chart
-            ScatterData scatterData = new ScatterData(dataSet);
+            scatterData = new ScatterData(dataSet);
             chart.setData(scatterData);
+
             chart.setVisibleXRangeMaximum(1);
+            chart.setVisibleYRangeMaximum(1, YAxis.AxisDependency.LEFT);
             chart.getXAxis().setDrawGridLines(false);
             yAxis.setDrawGridLines(false);
-            yAxis.setAxisMinimum((float)-1);
-            yAxis.setAxisMaximum((float)1);
+            yAxis.setAxisMinimum(-12);
+            yAxis.setAxisMaximum(8);
+            xAxis.setAxisMaximum(17);
+            xAxis.setAxisMinimum(-15);
             chart.getAxisRight().setDrawGridLines(false);
             chart.setScaleEnabled(false);
+            chart.getLegend().setEnabled(false);
             // refresh
+
             chart.notifyDataSetChanged();
             chart.invalidate();
-    }
-
-    private void createVarChart(List<Entry> entries, String _chartName){
-        // create new data set
-        LineDataSet dataSet = new LineDataSet(entries, _chartName);
-        dataSet.setColor(Color.parseColor("#701112"));
-        dataSet.setValueTextColor(Color.parseColor("#FFFFFF"));
-
-        // modify x-axis
-        XAxis xAxis = chart.getXAxis();
-        xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
-        xAxis.setGranularityEnabled(true); // prevent x-axis duplicates
-        // xAxis.setValueFormatter(new WeekLineChart());
-
-        // modify y-axis
-        YAxis yAxisRight = chart.getAxisRight();
-        yAxisRight.setEnabled(false);
-
-        // add data set to line chart
-        LineData lineData = new LineData(dataSet);
-       // varChart.setData(lineData);
-        // refresh
-      //  varChart.notifyDataSetChanged();
-       // varChart.invalidate();
     }
     private double[] parseData(String _responseData){
         // string split on comma
@@ -261,12 +245,24 @@ public class ExerciseFeedbackActivity extends Activity implements AdapterView.On
         forceCheck.setChecked(false);
 
 
-        List<Entry> entries = getEntries(xCoords, yCoords);
-        List<Entry> varEntries = getEntries(xCoordsV, yCoordsV);
-        if(entries != null & varEntries != null){
-            createChart(entries, chartName);
-            createVarChart(varEntries, chartName);
-            //Toast.makeText(getApplicationContext(), chartName, Toast.LENGTH_LONG).show();
+        entries = getEntries(xCoords, yCoords);
+        seekBar.setMax(100);
+        if(entries != null){
+            if(chart.getScatterData() == null) {
+                createChart(entries, chartName);
+                entries = getEntries(xCoords, yCoords);
+                scatterData.notifyDataChanged();
+                chart.notifyDataSetChanged();
+                chart.invalidate();
+            }
+            else {
+                scatterData.notifyDataChanged();
+                chart.notifyDataSetChanged();
+                chart.invalidate();
+            }
+            // otherwise update the dataset
+
+
         }
     }
 
