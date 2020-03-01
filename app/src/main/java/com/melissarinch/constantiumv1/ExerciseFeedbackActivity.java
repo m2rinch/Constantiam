@@ -13,6 +13,7 @@ import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.charts.ScatterChart;
@@ -113,7 +114,8 @@ public class ExerciseFeedbackActivity extends Activity implements AdapterView.On
             @Override
             public void onProgressChanged(SeekBar seekBar, int progressValue, boolean fromUser) {
                 progress = progressValue;
-                chart.centerViewTo((float)xCoords[progress], (float)yCoords[progress], YAxis.AxisDependency.LEFT);
+                UpdateChartValues(new double[] {xCoords[progress]}, new double[]{yCoords[progress]});
+                //chart.centerViewTo((float)xCoords[progress], (float)yCoords[progress], YAxis.AxisDependency.LEFT);
                 if(forceCheck.isChecked()){
                     int rightProgress = calculateProgress(progress, footType.RIGHT);
                     int leftProgress = calculateProgress(progress, footType.LEFT);
@@ -196,14 +198,14 @@ public class ExerciseFeedbackActivity extends Activity implements AdapterView.On
             scatterData = new ScatterData(dataSet);
             chart.setData(scatterData);
 
-            chart.setVisibleXRangeMaximum(1);
-            chart.setVisibleYRangeMaximum(1, YAxis.AxisDependency.LEFT);
+           // chart.setVisibleXRangeMaximum(1);
+            //chart.setVisibleYRangeMaximum(1, YAxis.AxisDependency.LEFT);
             chart.getXAxis().setDrawGridLines(false);
             yAxis.setDrawGridLines(false);
             yAxis.setAxisMinimum(-12);
             yAxis.setAxisMaximum(8);
-            xAxis.setAxisMaximum(17);
-            xAxis.setAxisMinimum(-15);
+            xAxis.setAxisMaximum(20);
+            xAxis.setAxisMinimum(-20);
             chart.getAxisRight().setDrawGridLines(false);
             chart.setScaleEnabled(false);
             chart.getLegend().setEnabled(false);
@@ -223,13 +225,13 @@ public class ExerciseFeedbackActivity extends Activity implements AdapterView.On
         return chartData;
     }
 
-    private double[] generateTimePoints(double[] _yData) {
-        double[] timeData = new double[_yData.length];
-        for (int i = 0; i < _yData.length; i++) {
-            timeData[i] = i;
-        }
-        return timeData;
-    }
+//    private double[] generateTimePoints(double[] _yData) {
+//        double[] timeData = new double[_yData.length];
+//        for (int i = 0; i < _yData.length; i++) {
+//            timeData[i] = i;
+//        }
+//        return timeData;
+//    }
 
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int pos, long l) {
@@ -239,18 +241,22 @@ public class ExerciseFeedbackActivity extends Activity implements AdapterView.On
         if (getIntent().hasExtra("Session")) {
             session = (Session) getIntent().getSerializableExtra("Session");
             setChartData(pos, session);
+            Toast.makeText(getApplicationContext(), String.valueOf(yCoords.length), Toast.LENGTH_LONG).show();
         }
         //getChartData will only return info is session has been populated
         zoneCheck.setChecked(false);
         forceCheck.setChecked(false);
 
+        UpdateChartValues(new double[] {xCoords[0]}, new double[]{yCoords[0]});
+    }
 
-        entries = getEntries(xCoords, yCoords);
-        seekBar.setMax(100);
+    private void UpdateChartValues(double[] _xCoords, double[] _yCoords) {
+        entries = getEntries(_xCoords, _yCoords);
+
         if(entries != null){
             if(chart.getScatterData() == null) {
                 createChart(entries, chartName);
-                entries = getEntries(xCoords, yCoords);
+                entries = getEntries(_xCoords, _yCoords);
                 scatterData.notifyDataChanged();
                 chart.notifyDataSetChanged();
                 chart.invalidate();
@@ -260,8 +266,6 @@ public class ExerciseFeedbackActivity extends Activity implements AdapterView.On
                 chart.notifyDataSetChanged();
                 chart.invalidate();
             }
-            // otherwise update the dataset
-
 
         }
     }
