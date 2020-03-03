@@ -154,16 +154,22 @@ public class ExerciseFeedbackActivity extends Activity implements AdapterView.On
                     yCoords = parseData(_session.getmCOPOverallY());
                     xCoords = parseData(_session.getmCOPOverallX());
                     chart.setBackgroundResource(R.drawable.shoeprint);
+                    chart.getXAxis().setAxisMaximum(22);
+                    chart.getXAxis().setAxisMinimum(-20);
                     break;
                 case 1:
                     yCoords = parseData(_session.getmCOPRightY());
                     xCoords = parseData(_session.getmCOPRightX());
                     chart.setBackgroundResource(R.drawable.right_shoe);
+                    chart.getXAxis().setAxisMaximum(22);
+                    chart.getXAxis().setAxisMinimum(12);
                     break;
                 case 2:
                     yCoords = parseData(_session.getmCOPLeftY());
                     xCoords = parseData(_session.getmCOPLeftX());
                     chart.setBackgroundResource(R.drawable.left_shoe);
+                    chart.getXAxis().setAxisMaximum(-12);
+                    chart.getXAxis().setAxisMinimum(-21);
                     break;
             }
           //  xCoords = (generateTimePoints(yCoords));
@@ -202,10 +208,8 @@ public class ExerciseFeedbackActivity extends Activity implements AdapterView.On
             //chart.setVisibleYRangeMaximum(1, YAxis.AxisDependency.LEFT);
             chart.getXAxis().setDrawGridLines(false);
             yAxis.setDrawGridLines(false);
-            yAxis.setAxisMinimum(-12);
-            yAxis.setAxisMaximum(8);
-            xAxis.setAxisMaximum(20);
-            xAxis.setAxisMinimum(-20);
+            yAxis.setAxisMinimum(-18);
+            yAxis.setAxisMaximum(10);
             chart.getAxisRight().setDrawGridLines(false);
             chart.setScaleEnabled(false);
             chart.getLegend().setEnabled(false);
@@ -241,7 +245,6 @@ public class ExerciseFeedbackActivity extends Activity implements AdapterView.On
         if (getIntent().hasExtra("Session")) {
             session = (Session) getIntent().getSerializableExtra("Session");
             setChartData(pos, session);
-            Toast.makeText(getApplicationContext(), String.valueOf(yCoords.length), Toast.LENGTH_LONG).show();
         }
         //getChartData will only return info is session has been populated
         zoneCheck.setChecked(false);
