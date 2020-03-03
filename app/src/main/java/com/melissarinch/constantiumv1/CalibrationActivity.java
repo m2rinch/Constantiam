@@ -11,6 +11,8 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.melissarinch.constantiumv1.data.CalibrationData;
+import com.melissarinch.constantiumv1.data.Exercise;
+import com.melissarinch.constantiumv1.data.Session;
 import com.microsoft.windowsazure.mobileservices.MobileServiceClient;
 
 import android.os.CountDownTimer;
@@ -25,7 +27,7 @@ import static com.microsoft.windowsazure.mobileservices.http.HttpConstants.PostM
 
 public class CalibrationActivity extends TimerScreenActivity{
 
-
+    Exercise exercise;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -37,6 +39,9 @@ public class CalibrationActivity extends TimerScreenActivity{
                 startStop();
             }
         });
+        if (getIntent().hasExtra("Exercise")) {
+            exercise = (Exercise) getIntent().getSerializableExtra("Exercise");
+        }
 
     }
 

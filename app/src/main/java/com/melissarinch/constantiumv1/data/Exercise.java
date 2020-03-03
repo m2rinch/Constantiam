@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.lang.reflect.Array;
 import java.util.List;
 
+@SuppressWarnings("serial") //With this annotation we are going to hide compiler warnings
 public class Exercise implements Serializable {
 
     @com.google.gson.annotations.SerializedName("exercise_name")

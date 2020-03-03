@@ -20,16 +20,17 @@
         <activity android:name=".CalibrationActivity" />
         <activity android:name=".BluetoothActivity" />
         <activity android:name=".SessionActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <activity android:name=".FeedbackActivity" />
         <activity android:name=".SettingsActivity" />
         <activity android:name=".ExerciseFeedbackActivity" />
         <activity android:name=".TimerScreenActivity" />
-        <activity android:name=".ExerciseListActivity" />
+        <activity android:name=".ExerciseListActivity">
+        <intent-filter>
+            <action android:name="android.intent.action.MAIN" />
+            <category android:name="android.intent.category.LAUNCHER" />
+        </intent-filter>
+        </activity>
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name" />

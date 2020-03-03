@@ -46,7 +46,7 @@ public class ExerciseListActivity extends Activity {
         exerciseList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Intent intent = new Intent(getApplicationContext(), ExerciseFeedbackActivity.class);
+                Intent intent = new Intent(getApplicationContext(), CalibrationActivity.class);
                 Exercise exercise = (Exercise) exerciseList.getItemAtPosition(i);
                 intent.putExtra("Exercise", exercise);
                 startActivity(intent);
