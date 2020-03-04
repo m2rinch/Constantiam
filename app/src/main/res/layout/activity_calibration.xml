@@ -9,6 +9,7 @@
     <include layout="@layout/titlebar"
         android:id="@+id/titlebar"
         app:layout_constraintTop_toTopOf="parent"/>
+
     <ImageButton
         android:layout_width="15dp"
         android:layout_height="15dp"
@@ -42,6 +43,28 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/calibrationText" />
+    <Button
+        android:id="@+id/beginButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@+id/timerScreen"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp"
+        android:text="@string/begin_calibration"/>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/sessionButton"
+        app:layout_constraintTop_toBottomOf="@+id/timerScreen"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp"
+        android:text="@string/continue_to_session" />
+
     <TextView
         android:id="@+id/resetTV"
         android:layout_width="wrap_content"
@@ -51,6 +74,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         android:layout_marginTop="5dp"
-        app:layout_constraintTop_toBottomOf="@+id/timerScreen" />
+        app:layout_constraintTop_toBottomOf="@+id/beginButton" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

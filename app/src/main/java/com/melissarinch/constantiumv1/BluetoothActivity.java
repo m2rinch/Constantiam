@@ -20,12 +20,12 @@ import java.util.UUID;
 import androidx.appcompat.app.AppCompatActivity;
 
 public class BluetoothActivity extends AppCompatActivity {
-    private final String DEVICE_ADDRESS="20:18:06:28:37:72";
-    private final UUID PORT_UUID = UUID.fromString("00001101-0000-1000-8000-00805f9b34fb");//Serial Port Service ID
-    private BluetoothDevice device;
-    private BluetoothSocket socket;
-    private OutputStream outputStream;
-    private InputStream inputStream;
+    final String DEVICE_ADDRESS="20:18:06:28:37:72";
+    final UUID PORT_UUID = UUID.fromString("00001101-0000-1000-8000-00805f9b34fb");//Serial Port Service ID
+    BluetoothDevice device;
+    BluetoothSocket socket;
+    OutputStream outputStream;
+    InputStream inputStream;
     Button startBlueButton, stopBlueButton;
     TextView textView;
     boolean deviceConnected=false;
@@ -150,7 +150,7 @@ public class BluetoothActivity extends AppCompatActivity {
         thread.start();
     }
 
-    public void onClickStartBlue(View view) {
+    public void onClickStartBlue() {
 
         // initialize bluetooth
         if(BTinit())
@@ -174,7 +174,7 @@ public class BluetoothActivity extends AppCompatActivity {
         }
     }
 
-    public void onClickStopBlue(View view) throws IOException {
+    public void onClickStopBlue() throws IOException {
         if(BTinit()) {
             stopThread = true;
             // disable start flag, 5 is an arbitrary number (0 default TX line)

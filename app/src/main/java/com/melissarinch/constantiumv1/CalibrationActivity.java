@@ -26,13 +26,14 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
 import static com.microsoft.windowsazure.mobileservices.http.HttpConstants.PostMethod;
 
-public class CalibrationActivity extends AppCompatActivity {
+public class CalibrationActivity extends BluetoothActivity {
 
     Exercise exercise;
     ImageButton backButton;
@@ -46,6 +47,7 @@ public class CalibrationActivity extends AppCompatActivity {
     public ProgressBar progressBarCircle;
     public TextView textViewTime;
     public Button beginCalibration;
+    public Button toSession;
     public CountDownTimer countDownTimer;
 
     @Override
@@ -57,6 +59,7 @@ public class CalibrationActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 startStop();
+                onClickStartBlue();
             }
         });
         if (getIntent().hasExtra("Exercise")) {
@@ -72,12 +75,16 @@ public class CalibrationActivity extends AppCompatActivity {
             }
         });
         initViews();
-        beginCalibration.setOnClickListener(new View.OnClickListener() {
+
+        toSession = findViewById(R.id.sessionButton);
+        toSession.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startStop();
+                Intent intent = new Intent(getApplicationContext(), SessionActivity.class);
+                startActivity(intent);
             }
         });
+        toSession.setVisibility(View.INVISIBLE);
 
     }
 
@@ -127,9 +134,13 @@ public class CalibrationActivity extends AppCompatActivity {
                 timeCountInMilliSeconds = 0;
                 textViewTime.setText(hmsTimeFormatter(timeCountInMilliSeconds));
                 setProgressBarValues();
-                timerStatus = TimerStatus.STOPPED;
                 try {
-                    sendCalibrationData("[2 4 5 6]");
+                    onClickStopBlue();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                try {
+                    sendCalibrationData(blueData); //TO DO: ensure that blue data is in the right format
                 } catch (MalformedURLException e) {
                     e.printStackTrace();
                 }
@@ -154,8 +165,12 @@ public class CalibrationActivity extends AppCompatActivity {
         return hms;
     }
 
-    public void sendCalibrationData(final String _calibrationData) throws MalformedURLException {
+    public void sendCalibrationData(String _calibrationData) throws MalformedURLException {
 
+        if(_calibrationData == "")
+        {
+            _calibrationData = "9,7,15,1,36,12,63,19,0,22,;,7,6,14,1,35,11,61,21,0,22,;,7,7,13,1,34,12,65,22,0,19,;,7,8,11,1,34,15,65,19,0,20,;";
+        }
         CalibrationData calibrationData = new CalibrationData();
         calibrationData.setmCreatedAt(new Date());
         calibrationData.setmExerciseId(1);
@@ -188,7 +203,9 @@ public class CalibrationActivity extends AppCompatActivity {
                     @Override
                     public void run() {
 
-                        Toast.makeText(getApplicationContext(), jsonElement.toString(), Toast.LENGTH_LONG).show();
+                        Toast.makeText(getApplicationContext(), "Calibration Completed!", Toast.LENGTH_LONG).show();
+                        beginCalibration.setVisibility(View.INVISIBLE);
+                        toSession.setVisibility(View.VISIBLE);
                     }
                 });
 
