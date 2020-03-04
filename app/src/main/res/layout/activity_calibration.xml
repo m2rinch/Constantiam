@@ -6,11 +6,24 @@
     android:layout_height="match_parent"
     tools:context=".CalibrationActivity">
 
+    <include layout="@layout/titlebar"
+        android:id="@+id/titlebar"
+        app:layout_constraintTop_toTopOf="parent"/>
+    <ImageButton
+        android:layout_width="15dp"
+        android:layout_height="15dp"
+        android:id="@+id/backButton"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/titlebar"
+        android:layout_marginStart="5dp"
+        android:background="@null"
+        android:padding="5dp"
+        android:src="@drawable/back" />
+
     <TextView
         android:id="@+id/calibrationText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
         android:text="@string/calibration_prompt"
         android:textAlignment="center"
         android:textSize="18sp"
@@ -19,7 +32,7 @@
         android:layout_marginLeft="10dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@id/backButton" />
 
     <include
         layout="@layout/activity_timer_screen"

@@ -18,6 +18,7 @@ import com.microsoft.windowsazure.mobileservices.MobileServiceClient;
 import android.os.CountDownTimer;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 import java.net.MalformedURLException;
@@ -28,6 +29,8 @@ import static com.microsoft.windowsazure.mobileservices.http.HttpConstants.PostM
 public class CalibrationActivity extends TimerScreenActivity{
 
     Exercise exercise;
+    ImageButton backButton;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,6 +45,15 @@ public class CalibrationActivity extends TimerScreenActivity{
         if (getIntent().hasExtra("Exercise")) {
             exercise = (Exercise) getIntent().getSerializableExtra("Exercise");
         }
+
+        backButton = findViewById(R.id.backButton);
+        backButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getApplicationContext(), ExerciseListActivity.class);
+                startActivity(intent);
+            }
+        });
 
     }
 

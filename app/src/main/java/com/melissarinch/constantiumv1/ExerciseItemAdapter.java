@@ -45,7 +45,7 @@ public class ExerciseItemAdapter extends ArrayAdapter<Exercise> {
         else{
             viewHolder = (ViewHolder)row.getTag();
         }
-        int resID = activity.getResources().getIdentifier("squat" , "drawable", activity.getPackageName());
+        int resID = activity.getResources().getIdentifier(currentItem.getImageName() , "drawable", activity.getPackageName());
         viewHolder.exerciseImageView.setImageResource(resID);
         viewHolder.exerciseNameTV.setText(currentItem.getText());
         viewHolder.exerciseDescriptionTV.setText(currentItem.getExerciseDescription());

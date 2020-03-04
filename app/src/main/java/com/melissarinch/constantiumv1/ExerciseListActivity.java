@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -35,11 +36,13 @@ public class ExerciseListActivity extends Activity {
     private String URL = "http://constantiam.azurewebsites.net/";
 
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_exercise_list);
         exerciseList = findViewById(R.id.exerciseList);
+
         // populate exercise item adapter with the list of exercises and apply to view
         mExerciseItemAdapter = new ExerciseItemAdapter(this,R.layout.row_exercise_list);
         exerciseList.setAdapter(mExerciseItemAdapter);
