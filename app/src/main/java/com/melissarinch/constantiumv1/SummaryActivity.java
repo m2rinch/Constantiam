@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ImageButton;
 import android.widget.ListView;
 
 import com.google.common.util.concurrent.FutureCallback;
@@ -16,6 +17,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.reflect.TypeToken;
 import com.melissarinch.constantiumv1.R;
+import com.melissarinch.constantiumv1.data.Exercise;
 import com.melissarinch.constantiumv1.data.KeyCharDescription;
 import com.melissarinch.constantiumv1.data.Session;
 import com.microsoft.windowsazure.mobileservices.MobileServiceClient;
@@ -35,6 +37,8 @@ public class SummaryActivity extends AppCompatActivity {
     private String TAG = SummaryActivity.class.getName();
     private String URL = "http://constantiam.azurewebsites.net/";
     Session session;
+    ImageButton backButton;
+    Exercise exercise;
 
 
     @Override
@@ -44,6 +48,7 @@ public class SummaryActivity extends AppCompatActivity {
         keycharList = findViewById(R.id.keycharList);
         mKeyCharAdapter = new KeyCharAdapter(this,R.layout.row_keychar_list);
         keycharList.setAdapter(mKeyCharAdapter);
+        backButton = findViewById(R.id.backButton);
         if (getIntent().hasExtra("Session")) {
             session = (Session) getIntent().getSerializableExtra("Session");
         }
@@ -55,6 +60,21 @@ public class SummaryActivity extends AppCompatActivity {
 
             Log.d(TAG, "Exception: " + e.getMessage());
         }
+        backButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (getIntent().hasExtra("Exercise")) {
+                    exercise = (Exercise) getIntent().getSerializableExtra("Exercise");
+                    Intent intent = new Intent(getApplicationContext(), ExerciseFeedbackActivity.class);
+                    Bundle bundle = new Bundle();
+                    bundle.putSerializable("Exercise", exercise);
+                    bundle.putSerializable("Session", session);
+                    intent.putExtras(bundle);
+                    startActivity(intent);
+                }
+
+            }
+        });
     }
 
 

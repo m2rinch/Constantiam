@@ -9,23 +9,40 @@
     <include layout="@layout/titlebar"
         android:id="@+id/titlebar"
         app:layout_constraintTop_toTopOf="parent"/>
-
-    <TextView
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center"
-        android:id="@+id/summaryTitle"
-        android:text="@string/summary"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        android:id="@+id/linearLayoutSummary"
         app:layout_constraintTop_toBottomOf="@id/titlebar"
-        android:layout_marginTop="10dp"
-        style="@style/exerciseNameStyle"
-        />
+        android:orientation="horizontal">
+
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/backButton"
+            android:layout_marginStart="5dp"
+            android:background="@null"
+            android:padding="5dp"
+            android:src="@drawable/back" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:id="@+id/summaryTitle"
+            android:text="@string/summary"
+            android:paddingStart="50dp"
+            app:layout_constraintTop_toBottomOf="@id/titlebar"
+            android:layout_marginTop="10dp"
+            style="@style/exerciseNameStyle"
+            />
+    </LinearLayout>
 
     <ListView
         android:id="@+id/keycharList"
-        app:layout_constraintTop_toBottomOf="@id/summaryTitle"
+        app:layout_constraintTop_toBottomOf="@id/linearLayoutSummary"
         android:padding="10dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

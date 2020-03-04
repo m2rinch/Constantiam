@@ -343,9 +343,15 @@ public class ExerciseFeedbackActivity extends Activity implements AdapterView.On
     }
 
     public void viewSummary(View v){
-        Intent intent = new Intent(getApplicationContext(), SummaryActivity.class);
-        intent.putExtra("Session", session);
-        startActivity(intent);
+        if(getIntent().hasExtra("Exercise")) {
+            exercise = (Exercise) getIntent().getSerializableExtra("Exercise");
+            Intent intent = new Intent(getApplicationContext(), SummaryActivity.class);
+            Bundle bundle = new Bundle();
+            bundle.putSerializable("Exercise", exercise);
+            bundle.putSerializable("Session", session);
+            intent.putExtras(bundle);
+            startActivity(intent);
+        }
     }
 
 }
