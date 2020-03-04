@@ -14,12 +14,30 @@
         <include layout="@layout/titlebar"
             android:id="@+id/titlebar"
             app:layout_constraintTop_toTopOf="parent"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:id="@+id/linearLayoutBack"
+            app:layout_constraintTop_toBottomOf="@id/titlebar"
+            android:orientation="horizontal">
+
+            <ImageButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/backButton"
+                android:layout_marginStart="5dp"
+                android:background="@null"
+                android:padding="5dp"
+                android:src="@drawable/back" />
+        </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:id="@+id/linearLayoutFeedback"
             android:layout_height="wrap_content"
-            app:layout_constraintTop_toBottomOf="@id/titlebar"
+            app:layout_constraintTop_toBottomOf="@id/linearLayoutBack"
             android:weightSum="1"
             android:orientation="horizontal">
         <TextView

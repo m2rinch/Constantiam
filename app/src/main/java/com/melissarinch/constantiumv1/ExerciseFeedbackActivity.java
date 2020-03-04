@@ -7,8 +7,10 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.Spinner;
@@ -25,6 +27,7 @@ import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.data.ScatterData;
 import com.github.mikephil.charting.data.ScatterDataSet;
 import com.github.mikephil.charting.utils.EntryXComparator;
+import com.melissarinch.constantiumv1.data.Exercise;
 import com.melissarinch.constantiumv1.data.Session;
 
 import java.util.ArrayList;
@@ -50,11 +53,13 @@ public class ExerciseFeedbackActivity extends Activity implements AdapterView.On
     SeekBar seekBar;
     String chartName;
     ImageView rightFoot;
+    ImageButton backButton;
     ImageView leftFoot;
     Session session;
     TextView rightText;
     TextView leftText;
     ScatterDataSet dataSet;
+    Exercise exercise;
     List<Entry> entries;
     enum footType {
         RIGHT,
@@ -75,6 +80,7 @@ public class ExerciseFeedbackActivity extends Activity implements AdapterView.On
         leftText = findViewById(R.id.leftText);
         forceCheck = findViewById(R.id.force_check);
         zoneCheck = findViewById(R.id.zone_check);
+        backButton = findViewById(R.id.backButton);
 
         entries = new ArrayList<>();
        forceCheck.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -106,6 +112,17 @@ public class ExerciseFeedbackActivity extends Activity implements AdapterView.On
         spinner.setAdapter(adapter);
         spinner.setOnItemSelectedListener(this);
 
+        backButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(getIntent().hasExtra("Exercise")){
+                    exercise = (Exercise) getIntent().getSerializableExtra("Exercise");
+                    Intent intent = new Intent(getApplicationContext(), SessionActivity.class);
+                    intent.putExtra("Exercise", exercise);
+                    startActivity(intent);
+                }
+            }
+        });
 
         seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             int progress = 0;
@@ -228,14 +245,6 @@ public class ExerciseFeedbackActivity extends Activity implements AdapterView.On
         }
         return chartData;
     }
-
-//    private double[] generateTimePoints(double[] _yData) {
-//        double[] timeData = new double[_yData.length];
-//        for (int i = 0; i < _yData.length; i++) {
-//            timeData[i] = i;
-//        }
-//        return timeData;
-//    }
 
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int pos, long l) {

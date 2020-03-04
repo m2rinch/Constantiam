@@ -156,7 +156,10 @@ public class SessionActivity extends BluetoothActivity {
                 final Session session = new Gson().fromJson(result.toString(), Session.class);
                 // go to feedback screen if successful and send session object
                 Intent intent = new Intent(getApplicationContext(), ExerciseFeedbackActivity.class);
-                intent.putExtra("Session", session);
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("Exercise", exercise);
+                bundle.putSerializable("Session", session);
+                intent.putExtras(bundle);
                 startActivity(intent);
 
                 runOnUiThread(new Runnable() {
