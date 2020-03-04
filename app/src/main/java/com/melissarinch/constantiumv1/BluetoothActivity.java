@@ -52,36 +52,34 @@ public class BluetoothActivity extends AppCompatActivity {
         if (bluetoothAdapter == null) {
             Toast.makeText(getApplicationContext(),"Device doesnt Support Bluetooth",Toast.LENGTH_SHORT).show();
         }
-        if(!bluetoothAdapter.isEnabled())
-        {
-            Intent enableAdapter = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-            startActivityForResult(enableAdapter, 0);
-            try {
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
-        Set<BluetoothDevice> bondedDevices = bluetoothAdapter.getBondedDevices();
-        if(bondedDevices.isEmpty())
-        {
-            Toast.makeText(getApplicationContext(),"Please Pair the Device first",Toast.LENGTH_SHORT).show();
-        }
-        else
-        {
-            Toast.makeText(getApplicationContext(),"Device is paired.",Toast.LENGTH_SHORT).show();
-            for (BluetoothDevice iterator : bondedDevices)
-            {
-                if(iterator.getAddress().equals(DEVICE_ADDRESS))
-                {
-                    device=iterator;
-                    found=true;
-                    Toast.makeText(getApplicationContext(),"HC-06 found",Toast.LENGTH_SHORT).show();
-                    break;
+        else {
+            // if bluetooth adapter is not null
+            if (!bluetoothAdapter.isEnabled()) {
+                Intent enableAdapter = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+                startActivityForResult(enableAdapter, 0);
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
                 }
             }
+            Set<BluetoothDevice> bondedDevices = bluetoothAdapter.getBondedDevices();
+            if (bondedDevices.isEmpty()) {
+                Toast.makeText(getApplicationContext(), "Please Pair the Device first", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(getApplicationContext(), "Device is paired.", Toast.LENGTH_SHORT).show();
+                for (BluetoothDevice iterator : bondedDevices) {
+                    if (iterator.getAddress().equals(DEVICE_ADDRESS)) {
+                        device = iterator;
+                        found = true;
+                        Toast.makeText(getApplicationContext(), "HC-06 found", Toast.LENGTH_SHORT).show();
+                        break;
+                    }
+                }
+            }
+            return found;
         }
-        return found;
+        return false;
     }
 
     public boolean BTconnect()
@@ -162,38 +160,38 @@ public class BluetoothActivity extends AppCompatActivity {
                 deviceConnected=true;
                 //beginListenForData();
                 textView.append("\nConnection Opened!\n");
+                // send start flag to Arduino to begin sending data
+                String string = ("1");
+                try {
+                    outputStream.write(string.getBytes());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+                textView.append("Sent Start Command");
+                beginListenForData();
             }
-
         }
-
-        // send start flag to Arduino to begin sending data
-        String string = ("1");
-        try {
-            outputStream.write(string.getBytes());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        textView.append("Sent Start Command");
-        beginListenForData();
     }
 
     public void onClickStopBlue(View view) throws IOException {
-        stopThread = true;
-        // disable start flag, 5 is an arbitrary number (0 default TX line)
-        String string = ("5");
-        try {
-            outputStream.write(string.getBytes());
-        } catch (IOException e) {
-            e.printStackTrace();
+        if(BTinit()) {
+            stopThread = true;
+            // disable start flag, 5 is an arbitrary number (0 default TX line)
+            String string = ("5");
+            try {
+                outputStream.write(string.getBytes());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            outputStream.close();
+            inputStream.close();
+            socket.close();
+            deviceConnected = false;
+            textView.setText("");
+            textView.append(blueData);
+            textView.append("\nConnection Closed!\n");
         }
-        outputStream.close();
-        inputStream.close();
-        socket.close();
-        deviceConnected = false;
-        textView.setText("");
-        textView.append(blueData);
-        textView.append("\nConnection Closed!\n");
     }
 
 }
