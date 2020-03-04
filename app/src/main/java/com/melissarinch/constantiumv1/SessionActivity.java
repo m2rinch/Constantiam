@@ -27,11 +27,13 @@ import android.widget.ImageView;
 import android.widget.NumberPicker;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.Date;
 import static com.microsoft.windowsazure.mobileservices.http.HttpConstants.PostMethod;
 
-public class SessionActivity extends AppCompatActivity {
+public class SessionActivity extends BluetoothActivity {
     private Button sessionButton;
     ImageButton backButton;
     private Chronometer chronometer; // taken from https://www.youtube.com/watch?v=RLnb4vVkftc
@@ -57,8 +59,15 @@ public class SessionActivity extends AppCompatActivity {
         sessionButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 try {
-                    sendString(sensorData);
-                } catch (MalformedURLException e) {
+                    onClickStopBlue();
+                }  catch (IOException e) {
+                    e.printStackTrace();
+                }
+                try{
+
+                    sendString(blueData);
+                }
+                catch (MalformedURLException e) {
                     e.printStackTrace();
                 }
             }
@@ -93,6 +102,7 @@ public class SessionActivity extends AppCompatActivity {
             chronometer.setBase(SystemClock.elapsedRealtime() - pauseOffset);
             chronometer.start();
             running = true;
+            onClickStartBlue();
         } else {
             playPause.setImageResource(R.drawable.play);
             pauseStopwatch();
@@ -109,8 +119,11 @@ public class SessionActivity extends AppCompatActivity {
         Intent intent = new Intent(getApplicationContext(), SessionActivity.class);
         startActivity(intent);
     }
-    public void sendString(final String _sensorData) throws MalformedURLException {
+    public void sendString(String _sensorData) throws MalformedURLException {
 
+        if(_sensorData == "") {
+            _sensorData = sensorData;
+        }
         SessionData sessionData = new SessionData();
         sessionData.setmId("1");
         sessionData.setmCreatedAt(new Date());
