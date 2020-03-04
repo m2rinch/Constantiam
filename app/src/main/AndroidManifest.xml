@@ -18,10 +18,6 @@
         <activity android:name=".SummaryActivity">
         </activity>
         <activity android:name=".CalibrationActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <activity android:name=".BluetoothActivity">
         </activity>
@@ -32,6 +28,10 @@
         <activity android:name=".ExerciseFeedbackActivity" />
         <activity android:name=".TimerScreenActivity" />
         <activity android:name=".ExerciseListActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
         <activity
             android:name=".MainActivity"

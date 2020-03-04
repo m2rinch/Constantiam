@@ -49,12 +49,14 @@ public class CalibrationActivity extends BluetoothActivity {
     public Button beginCalibration;
     public Button toSession;
     public CountDownTimer countDownTimer;
+    TextView exerciseName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_calibration);
         initViews();
+        exerciseName = findViewById(R.id.exerciseNameCalibration);
         beginCalibration.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -64,6 +66,7 @@ public class CalibrationActivity extends BluetoothActivity {
         });
         if (getIntent().hasExtra("Exercise")) {
             exercise = (Exercise) getIntent().getSerializableExtra("Exercise");
+            exerciseName.setText(exercise.getText());
         }
 
         backButton = findViewById(R.id.backButton);
@@ -81,6 +84,7 @@ public class CalibrationActivity extends BluetoothActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(getApplicationContext(), SessionActivity.class);
+                intent.putExtra("Exercise", exercise);
                 startActivity(intent);
             }
         });
@@ -173,7 +177,7 @@ public class CalibrationActivity extends BluetoothActivity {
         }
         CalibrationData calibrationData = new CalibrationData();
         calibrationData.setmCreatedAt(new Date());
-        calibrationData.setmExerciseId(1);
+        calibrationData.setmExerciseId(Integer.parseInt(exercise.getId()));
         calibrationData.setmUserId(1);
         calibrationData.setmSensorData(_calibrationData);
 
