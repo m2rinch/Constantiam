@@ -18,18 +18,35 @@ import com.microsoft.windowsazure.mobileservices.MobileServiceClient;
 import android.os.CountDownTimer;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import java.net.MalformedURLException;
 import java.util.Date;
+import java.util.concurrent.TimeUnit;
 
 import static com.microsoft.windowsazure.mobileservices.http.HttpConstants.PostMethod;
 
-public class CalibrationActivity extends TimerScreenActivity{
+public class CalibrationActivity extends AppCompatActivity {
 
     Exercise exercise;
     ImageButton backButton;
+    public long timeCountInMilliSeconds = 1*60000;
+    public enum TimerStatus {
+        STARTED,
+        STOPPED
+    }
+
+    public TimerStatus timerStatus = TimerStatus.STOPPED;
+    public ProgressBar progressBarCircle;
+    public TextView textViewTime;
+    public Button beginCalibration;
+    public CountDownTimer countDownTimer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,13 +71,45 @@ public class CalibrationActivity extends TimerScreenActivity{
                 startActivity(intent);
             }
         });
+        initViews();
+        beginCalibration.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startStop();
+            }
+        });
 
     }
 
-    @Override
+    public void initViews() {
+        progressBarCircle = findViewById(R.id.progressBarCircle);
+        textViewTime = findViewById(R.id.textViewTime);
+        beginCalibration = findViewById(R.id.beginButton);
+    }
+
+    /**
+     * method to set circular progress bar values
+     */
+    public void setProgressBarValues() {
+
+        progressBarCircle.setMax((int) timeCountInMilliSeconds / 1000);
+        progressBarCircle.setProgress((int) timeCountInMilliSeconds / 1000);
+    }
+
     public void startStop() {
-        super.startStop();
+        setTimerValues();
+        setProgressBarValues();
+        timerStatus = TimerStatus.STARTED;
+        // call to start the count down timer
+        beginCalibration.setAlpha(.5f);
+        beginCalibration.setClickable(false);
         startCountDownTimer();
+    }
+
+
+    public void setTimerValues() {
+        int time = 1;
+        timeCountInMilliSeconds = time * 10 * 1000;
     }
 
     public void startCountDownTimer() {
@@ -93,6 +142,16 @@ public class CalibrationActivity extends TimerScreenActivity{
     public void restartCalibration(View view){
         Intent intent = new Intent(getApplicationContext(), CalibrationActivity.class);
         startActivity(intent);
+    }
+
+    public String hmsTimeFormatter(long milliSeconds) {
+
+        String hms = String.format("%02d:%02d:%02d",
+                TimeUnit.MILLISECONDS.toHours(milliSeconds),
+                TimeUnit.MILLISECONDS.toMinutes(milliSeconds) - TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(milliSeconds)),
+                TimeUnit.MILLISECONDS.toSeconds(milliSeconds) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(milliSeconds)));
+
+        return hms;
     }
 
     public void sendCalibrationData(final String _calibrationData) throws MalformedURLException {
@@ -140,5 +199,6 @@ public class CalibrationActivity extends TimerScreenActivity{
                 Log.d("Calibration Activity", "onFailure: " + throwable.getMessage());
             }
         });
+
     }
 }
