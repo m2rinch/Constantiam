@@ -3,6 +3,7 @@ package com.melissarinch.constantiumv1;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.Paint;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
@@ -17,10 +18,14 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.github.mikephil.charting.charts.CandleStickChart;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.charts.ScatterChart;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
+import com.github.mikephil.charting.data.CandleData;
+import com.github.mikephil.charting.data.CandleDataSet;
+import com.github.mikephil.charting.data.CandleEntry;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
@@ -38,8 +43,8 @@ import java.util.List;
 public class ExerciseFeedbackActivity extends Activity implements AdapterView.OnItemSelectedListener {
 
     Spinner spinner;
-    ScatterChart chart;
-    ScatterData scatterData;
+    CandleStickChart chart;
+    CandleData candleData;
     // LineChart varChart;
     double[] xCoords;
     double[] yCoords;
@@ -58,9 +63,9 @@ public class ExerciseFeedbackActivity extends Activity implements AdapterView.On
     Session session;
     TextView rightText;
     TextView leftText;
-    ScatterDataSet dataSet;
+    CandleDataSet dataSet;
     Exercise exercise;
-    List<Entry> entries;
+    List<CandleEntry> entries;
     enum footType {
         RIGHT,
         LEFT,
@@ -131,7 +136,7 @@ public class ExerciseFeedbackActivity extends Activity implements AdapterView.On
             @Override
             public void onProgressChanged(SeekBar seekBar, int progressValue, boolean fromUser) {
                 progress = progressValue;
-                UpdateChartValues(new double[] {xCoords[progress]}, new double[]{yCoords[progress]});
+                UpdateChartValues(new double[] {xCoords[progress]}, new double[]{yCoords[progress]}, new double[]{yCoordsV[progress]});
                 //chart.centerViewTo((float)xCoords[progress], (float)yCoords[progress], YAxis.AxisDependency.LEFT);
                 if(forceCheck.isChecked()){
                     int rightProgress = calculateProgress(progress, footType.RIGHT);
@@ -170,6 +175,7 @@ public class ExerciseFeedbackActivity extends Activity implements AdapterView.On
                 case 0:
                     yCoords = parseData(_session.getmCOPOverallY());
                     xCoords = parseData(_session.getmCOPOverallX());
+                    yCoordsV = parseData(_session.getVariabilityOverall());
                     chart.setBackgroundResource(R.drawable.shoeprint);
                     chart.getXAxis().setAxisMaximum(22);
                     chart.getXAxis().setAxisMinimum(-20);
@@ -177,6 +183,7 @@ public class ExerciseFeedbackActivity extends Activity implements AdapterView.On
                 case 1:
                     yCoords = parseData(_session.getmCOPRightY());
                     xCoords = parseData(_session.getmCOPRightX());
+                    yCoordsV = parseData(_session.getVariabilityRight());
                     chart.setBackgroundResource(R.drawable.right_shoe);
                     chart.getXAxis().setAxisMaximum(22);
                     chart.getXAxis().setAxisMinimum(12);
@@ -184,28 +191,47 @@ public class ExerciseFeedbackActivity extends Activity implements AdapterView.On
                 case 2:
                     yCoords = parseData(_session.getmCOPLeftY());
                     xCoords = parseData(_session.getmCOPLeftX());
+                    yCoordsV = parseData(_session.getVariabilityLeft());
                     chart.setBackgroundResource(R.drawable.left_shoe);
                     chart.getXAxis().setAxisMaximum(-12);
                     chart.getXAxis().setAxisMinimum(-21);
                     break;
             }
-          //  xCoords = (generateTimePoints(yCoords));
+            xCoordsV = (generateTimePoints(yCoordsV));
     }
 
-    private List<Entry> getEntries(double[] xCoords, double[] yCoords) {
+    private double[] generateTimePoints(double[] _yData) {
+        double[] timeData = new double[_yData.length];
+        for (int i = 0; i < _yData.length; i++) {
+            timeData[i] = i;
+        }
+        return timeData;
+    }
+
+    private List<CandleEntry> getEntries(double[] xCoords, double[] yCoords, double[] yCoordsV) {
         entries.clear();
         for (int i = 0; i < xCoords.length; i++) {
-            entries.add(new Entry((float)xCoords[i], (float)yCoords[i]));
+            // candle entry (x, shadowHigh, shadowLow, open, close)
+            entries.add(new CandleEntry((float)xCoords[i],(float) (yCoords[i] + 0.5 + yCoordsV[i]),(float)(yCoords[i] - 0.5 - yCoordsV[i]),(float)(yCoords[i]-0.5), (float)(yCoords[i]+0.5)));
         }
         return entries;
     }
 
-    private void createChart(List<Entry> entries, String _chartName){
+    private void createChart(List<CandleEntry> entries, String _chartName){
             // create new data set
            // Collections.sort(entries, new EntryXComparator());
-            dataSet = new ScatterDataSet(entries, _chartName);
+            dataSet = new CandleDataSet(entries, _chartName);
             dataSet.setColor(Color.parseColor("#701112"));
-            dataSet.setValueTextColor(Color.parseColor("#FFFFFF"));
+            dataSet.setShadowColor(Color.parseColor("#000000"));
+            dataSet.setShadowWidth(1f);
+            dataSet.setShowCandleBar(true);
+
+            dataSet.setDecreasingColor(Color.parseColor("#701112"));
+            dataSet.setDecreasingPaintStyle(Paint.Style.FILL);
+            dataSet.setIncreasingColor(Color.parseColor("#701112"));
+            dataSet.setIncreasingPaintStyle(Paint.Style.FILL);
+            dataSet.setNeutralColor(Color.parseColor("#701112"));
+            dataSet.setDrawValues(false);
 
             // modify x-axis
             XAxis xAxis = chart.getXAxis();
@@ -218,8 +244,8 @@ public class ExerciseFeedbackActivity extends Activity implements AdapterView.On
             YAxis yAxis = chart.getAxisLeft();
 
             // add data set to line chart
-            scatterData = new ScatterData(dataSet);
-            chart.setData(scatterData);
+            candleData = new CandleData(dataSet);
+            chart.setData(candleData);
 
            // chart.setVisibleXRangeMaximum(1);
             //chart.setVisibleYRangeMaximum(1, YAxis.AxisDependency.LEFT);
@@ -259,22 +285,31 @@ public class ExerciseFeedbackActivity extends Activity implements AdapterView.On
         zoneCheck.setChecked(false);
         forceCheck.setChecked(false);
 
-        UpdateChartValues(new double[] {xCoords[0]}, new double[]{yCoords[0]});
+        UpdateChartValues(new double[] {xCoords[0]}, new double[]{yCoords[0]}, new double[] {yCoordsV[0]});
     }
 
-    private void UpdateChartValues(double[] _xCoords, double[] _yCoords) {
-        entries = getEntries(_xCoords, _yCoords);
+    private void UpdateChartValues(double[] _xCoords, double[] _yCoords, double[] _yCoordsV) {
+        entries = getEntries(_xCoords, _yCoords, _yCoordsV);
+        if(dataSet != null){
+            if(String.valueOf(chartName).equals("Overall COP")) {
+                dataSet.setBarSpace(0.1f);
+            }
+            else {
+                dataSet.setBarSpace(0.4f);
+            }
+        }
 
         if(entries != null){
-            if(chart.getScatterData() == null) {
+            if(chart.getCandleData() == null) {
                 createChart(entries, chartName);
-                entries = getEntries(_xCoords, _yCoords);
-                scatterData.notifyDataChanged();
+                entries = getEntries(_xCoords, _yCoords, _yCoordsV);
+                candleData.notifyDataChanged();
                 chart.notifyDataSetChanged();
                 chart.invalidate();
             }
             else {
-                scatterData.notifyDataChanged();
+
+                candleData.notifyDataChanged();
                 chart.notifyDataSetChanged();
                 chart.invalidate();
             }
