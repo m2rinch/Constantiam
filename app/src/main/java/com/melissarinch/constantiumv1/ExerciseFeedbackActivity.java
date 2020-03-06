@@ -178,6 +178,7 @@ public class ExerciseFeedbackActivity extends Activity implements AdapterView.On
                     yCoordsV = parseData(_session.getVariabilityOverall());
                     chart.setBackgroundResource(R.drawable.shoeprint);
                     chart.getXAxis().setAxisMaximum(22);
+                    forceCheck.setVisibility(View.VISIBLE);
                     chart.getXAxis().setAxisMinimum(-20);
                     break;
                 case 1:
@@ -185,6 +186,7 @@ public class ExerciseFeedbackActivity extends Activity implements AdapterView.On
                     xCoords = parseData(_session.getmCOPRightX());
                     yCoordsV = parseData(_session.getVariabilityRight());
                     chart.setBackgroundResource(R.drawable.right_shoe);
+                    forceCheck.setVisibility(View.GONE);
                     chart.getXAxis().setAxisMaximum(22);
                     chart.getXAxis().setAxisMinimum(12);
                     break;
@@ -193,6 +195,7 @@ public class ExerciseFeedbackActivity extends Activity implements AdapterView.On
                     xCoords = parseData(_session.getmCOPLeftX());
                     yCoordsV = parseData(_session.getVariabilityLeft());
                     chart.setBackgroundResource(R.drawable.left_shoe);
+                    forceCheck.setVisibility(View.GONE);
                     chart.getXAxis().setAxisMaximum(-12);
                     chart.getXAxis().setAxisMinimum(-21);
                     break;
@@ -222,6 +225,7 @@ public class ExerciseFeedbackActivity extends Activity implements AdapterView.On
            // Collections.sort(entries, new EntryXComparator());
             dataSet = new CandleDataSet(entries, _chartName);
             dataSet.setColor(Color.parseColor("#701112"));
+            dataSet.setShadowColor(Color.parseColor("#000000"));
             dataSet.setShadowColor(Color.parseColor("#000000"));
             dataSet.setShadowWidth(1f);
             dataSet.setShowCandleBar(true);
@@ -280,6 +284,7 @@ public class ExerciseFeedbackActivity extends Activity implements AdapterView.On
         if (getIntent().hasExtra("Session")) {
             session = (Session) getIntent().getSerializableExtra("Session");
             setChartData(pos, session);
+            seekBar.setMax(yCoords.length-1);
         }
         //getChartData will only return info is session has been populated
         zoneCheck.setChecked(false);

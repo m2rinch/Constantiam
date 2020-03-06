@@ -60,8 +60,8 @@ public class CalibrationActivity extends BluetoothActivity {
         beginCalibration.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startStop();
                 onClickStartBlue();
+                startStop();
             }
         });
         if (getIntent().hasExtra("Exercise")) {
@@ -88,7 +88,7 @@ public class CalibrationActivity extends BluetoothActivity {
                 startActivity(intent);
             }
         });
-        toSession.setVisibility(View.INVISIBLE);
+        toSession.setVisibility(View.GONE);
 
     }
 
@@ -156,6 +156,7 @@ public class CalibrationActivity extends BluetoothActivity {
 
     public void restartCalibration(View view){
         Intent intent = new Intent(getApplicationContext(), CalibrationActivity.class);
+        intent.putExtra("Exercise", exercise);
         startActivity(intent);
     }
 
@@ -171,10 +172,11 @@ public class CalibrationActivity extends BluetoothActivity {
 
     public void sendCalibrationData(String _calibrationData) throws MalformedURLException {
 
-        if(_calibrationData == "")
-        {
-            _calibrationData = "9,7,15,1,36,12,63,19,0,22,;,7,6,14,1,35,11,61,21,0,22,;,7,7,13,1,34,12,65,22,0,19,;,7,8,11,1,34,15,65,19,0,20,;";
-        }
+//        if(_calibrationData == "")
+//        {
+//            _calibrationData = "9,7,15,1,36,12,63,19,0,22,;,7,6,14,1,35,11,61,21,0,22,;,7,7,13,1,34,12,65,22,0,19,;,7,8,11,1,34,15,65,19,0,20,;";
+//        }
+        Log.i("Calibration Activity", _calibrationData);
         CalibrationData calibrationData = new CalibrationData();
         calibrationData.setmCreatedAt(new Date());
         calibrationData.setmExerciseId(Integer.parseInt(exercise.getId()));
@@ -208,7 +210,7 @@ public class CalibrationActivity extends BluetoothActivity {
                     public void run() {
 
                         Toast.makeText(getApplicationContext(), "Calibration Completed!", Toast.LENGTH_LONG).show();
-                        beginCalibration.setVisibility(View.INVISIBLE);
+                        beginCalibration.setVisibility(View.GONE);
                         toSession.setVisibility(View.VISIBLE);
                     }
                 });

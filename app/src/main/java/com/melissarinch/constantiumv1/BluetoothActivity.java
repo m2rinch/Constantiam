@@ -163,7 +163,10 @@ public class BluetoothActivity extends AppCompatActivity {
                 // send start flag to Arduino to begin sending data
                 String string = ("1");
                 try {
-                    outputStream.write(string.getBytes());
+                    if(outputStream != null) {
+                        outputStream.write(string.getBytes());
+                    }
+
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -180,17 +183,20 @@ public class BluetoothActivity extends AppCompatActivity {
             // disable start flag, 5 is an arbitrary number (0 default TX line)
             String string = ("5");
             try {
-                outputStream.write(string.getBytes());
+                if(outputStream != null) {
+                    outputStream.write(string.getBytes());
+                    outputStream.close();
+                    inputStream.close();
+                    socket.close();
+                    deviceConnected = false;
+                    textView.setText("");
+                    textView.append(blueData);
+                    textView.append("\nConnection Closed!\n");
+                }
+
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            outputStream.close();
-            inputStream.close();
-            socket.close();
-            deviceConnected = false;
-            textView.setText("");
-            textView.append(blueData);
-            textView.append("\nConnection Closed!\n");
         }
     }
 

@@ -98,11 +98,12 @@ public class SessionActivity extends BluetoothActivity {
     // clicks finish button, -> set timer to !running, send string
     public void controlStopwatch(View v){
         if(!running){
+            onClickStartBlue();
             playPause.setImageResource(R.drawable.stop);
             chronometer.setBase(SystemClock.elapsedRealtime() - pauseOffset);
             chronometer.start();
             running = true;
-            onClickStartBlue();
+
         } else {
             playPause.setImageResource(R.drawable.play);
             pauseStopwatch();
@@ -117,6 +118,7 @@ public class SessionActivity extends BluetoothActivity {
 
     public void restartSession(View view){
         Intent intent = new Intent(getApplicationContext(), SessionActivity.class);
+        intent.putExtra("Exercise", exercise);
         startActivity(intent);
     }
     public void sendString(String _sensorData) throws MalformedURLException {
@@ -124,6 +126,8 @@ public class SessionActivity extends BluetoothActivity {
         if(_sensorData == "") {
             _sensorData = sensorData;
         }
+
+        Log.i("Session Activity", _sensorData);
         SessionData sessionData = new SessionData();
         sessionData.setmId("1");
         sessionData.setmCreatedAt(new Date());
