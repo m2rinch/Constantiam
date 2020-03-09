@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/linearLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:weightSum="1"
+    tools:context=".SessionActivity">
+
+    <include layout="@layout/titlebar"
+        android:id="@+id/titlebar"
+        app:layout_constraintTop_toTopOf="parent"/>
+
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/backButton"
+        android:layout_marginStart="5dp"
+        android:background="@null"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/titlebar"
+        android:padding="5dp"
+        android:src="@drawable/back" />
+
+    <TextView
+        android:id="@+id/exerciseName"
+        android:textSize="30sp"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/titlebar"
+        android:gravity="center"
+        style="@style/exerciseNameStyle"
+        android:layout_width="wrap_content"/>
+
+
+    <TextView
+        android:id="@+id/weightTV"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/weight_lifted"
+        android:paddingTop="30dp"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toTopOf="@+id/weightEnter"
+        app:layout_constraintTop_toBottomOf="@id/exerciseName"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"/>
+
+    <EditText
+        android:id="@+id/weightEnter"
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:inputType="number"
+        app:layout_constraintTop_toBottomOf="@id/weightTV" />
+
+    <Chronometer
+        android:id="@+id/chronometer"
+        style="@style/stopwatchText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="number"
+        android:layout_marginTop="50dp"
+        app:layout_constraintBottom_toTopOf="@+id/playPauseSession"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/weightEnter"/>
+
+    <ImageView
+        android:id="@+id/playPauseSession"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:onClick="controlStopwatch"
+        android:src="@drawable/play"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_margin="40dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/session_button"
+        app:layout_constraintTop_toBottomOf="@+id/chronometer" />
+
+    <Button
+        android:id="@+id/session_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/finish"
+        android:layout_margin="20dp"
+        app:layout_constraintBottom_toTopOf="@+id/resetTV"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"/>
+
+    <TextView
+        android:id="@+id/resetTV"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="restartSession"
+        android:layout_margin="20dp"
+        android:text="@string/reset_session"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/session_button" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
