@@ -21,6 +21,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.SystemClock;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -50,6 +51,7 @@ public class SessionActivity extends BluetoothActivity {
     private Gson gson = new Gson();
     Exercise exercise;
     TextView exerciseName;
+    SessionData sessionData;
 
 
     @Override
@@ -63,14 +65,24 @@ public class SessionActivity extends BluetoothActivity {
         sessionButton = findViewById(R.id.session_button);
         sessionButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                try {
-                    onClickStopBlue();
-                }  catch (IOException e) {
-                    e.printStackTrace();
-                }
-                try{
 
-                    sendString(blueData);
+                try{
+                    if(sessionData == null) {
+                        if(running) {
+                            Toast toast = Toast.makeText(SessionActivity.this, "Please stop the timer first", Toast.LENGTH_SHORT);
+                            toast.setGravity(Gravity.CENTER,0, 0);
+                            toast.show();
+                        }
+                        else {
+                            Toast toast = Toast.makeText(SessionActivity.this, "Please record a session first", Toast.LENGTH_SHORT);
+                            toast.setGravity(Gravity.CENTER, 0, 0);
+                            toast.show();
+                        }
+                    }
+                    else if (sessionData != null && !running) {
+                        sendString(sessionData);
+                    }
+
                 }
                 catch (MalformedURLException e) {
                     e.printStackTrace();
@@ -117,38 +129,39 @@ public class SessionActivity extends BluetoothActivity {
     // clicks finish button, -> set timer to !running, send string
     public void controlStopwatch(View v){
         if(!running){
+            // you can start
             onClickStartBlue();
             playPause.setImageResource(R.drawable.stop);
             chronometer.setBase(SystemClock.elapsedRealtime() - pauseOffset);
             chronometer.start();
             running = true;
+            //disable weight lifted
+            weightPicker.setFocusable(false);
+            weightPicker.setFocusableInTouchMode(false);
+            weightPicker.setClickable(false);
+            weightPicker.setBackgroundColor(getResources().getColor(R.color.lightGrey));
 
         } else {
+            // if stopped, we cant do anything
             playPause.setImageResource(R.drawable.play);
             pauseStopwatch();
+            playPause.setClickable(false);
+            playPause.setImageAlpha(100);
+            try {
+                // stop bluetooth
+                onClickStopBlue();
+            }  catch (IOException e) {
+                e.printStackTrace();
+            }
+            //create session data object to send to server
+             sessionData = createSession(blueData);
+
         }
     }
 
-    public void pauseStopwatch(){
-            chronometer.stop();
-            pauseOffset = SystemClock.elapsedRealtime() - chronometer.getBase();
-            running = false;
-    }
-
-    public void restartSession(View view){
-        Intent intent = new Intent(getApplicationContext(), SessionActivity.class);
-        intent.putExtra("Exercise", exercise);
-        startActivity(intent);
-    }
-
-    public static void hideSoftKeyboard (Activity activity, View view)
-    {
-        InputMethodManager imm = (InputMethodManager)activity.getSystemService(Context.INPUT_METHOD_SERVICE);
-        imm.hideSoftInputFromWindow(view.getApplicationWindowToken(), 0);
-    }
-
-    public void sendString(String _sensorData) throws MalformedURLException {
-
+    // call this when the user hits pause
+    // then on view feedback, we send t
+    private SessionData createSession(String _sensorData){
         if(_sensorData == "") {
             _sensorData = sensorData;
         }
@@ -168,6 +181,21 @@ public class SessionActivity extends BluetoothActivity {
         else {
             sessionData.setmWeight(Integer.parseInt(weightPicker.getText().toString()));
         }
+        return sessionData;
+    }
+    public void pauseStopwatch(){
+            chronometer.stop();
+            pauseOffset = SystemClock.elapsedRealtime() - chronometer.getBase();
+            running = false;
+    }
+
+    public void restartSession(View view){
+        Intent intent = new Intent(getApplicationContext(), SessionActivity.class);
+        intent.putExtra("Exercise", exercise);
+        startActivity(intent);
+    }
+
+    public void sendString(SessionData sessionData) throws MalformedURLException {
         // Log.d("Session Activity JSON", gson.toJson(sessionData));
         JsonElement sessionJSON = new JsonParser().parse(gson.toJson(sessionData));
 
@@ -196,14 +224,6 @@ public class SessionActivity extends BluetoothActivity {
                 bundle.putSerializable("Session", session);
                 intent.putExtras(bundle);
                 startActivity(intent);
-
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-
-                       // Toast.makeText(getApplicationContext(), String.valueOf("COP_overall: " + session.getmCOPOverall()), Toast.LENGTH_LONG).show();
-                    }
-                });
 
             }
 

@@ -14,10 +14,11 @@
         app:layout_constraintTop_toTopOf="parent"/>
 
     <ImageButton
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
         android:id="@+id/backButton"
         android:layout_marginStart="5dp"
+        android:layout_marginTop="10dp"
         android:background="@null"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/titlebar"
@@ -43,7 +44,7 @@
         android:text="@string/weight_lifted"
         android:paddingTop="30dp"
         android:textSize="20sp"
-        app:layout_constraintBottom_toTopOf="@+id/weightEnter"
+        app:layout_constraintBottom_toTopOf="@id/weightEnter"
         app:layout_constraintTop_toBottomOf="@id/exerciseName"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"/>
@@ -97,6 +98,7 @@
         android:layout_height="wrap_content"
         android:onClick="restartSession"
         android:layout_margin="20dp"
+        android:textSize="15sp"
         android:text="@string/reset_session"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
