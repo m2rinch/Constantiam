@@ -25,6 +25,7 @@
     <string name="checkbox_force">display force on foot</string>
     <string name="select_an_exercise_to_begin">Select an Exercise to begin</string>
     <string name="continue_to_session">Continue to Session</string>
+    <string name="feedback">FEEDBACK</string>
     <string-array name="charts_array">
         <item>Overall COP</item>
         <item>Right Foot COP</item>

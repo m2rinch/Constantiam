@@ -45,7 +45,6 @@ public class ExerciseFeedbackActivity extends Activity implements AdapterView.On
     Spinner spinner;
     CandleStickChart chart;
     CandleData candleData;
-    // LineChart varChart;
     double[] xCoords;
     double[] yCoords;
     double[] xCoordsV;
@@ -54,7 +53,6 @@ public class ExerciseFeedbackActivity extends Activity implements AdapterView.On
     double[] leftForce;
     CheckBox forceCheck;
     CheckBox zoneCheck;
-    TextView chartTitle;
     SeekBar seekBar;
     String chartName;
     ImageView rightFoot;
@@ -76,7 +74,6 @@ public class ExerciseFeedbackActivity extends Activity implements AdapterView.On
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_exercise_feedback);
-        chartTitle = findViewById(R.id.feedbackChartTitle);
         rightFoot = findViewById(R.id.overlay);
         leftFoot = findViewById(R.id.overlayLeft);
         spinner = findViewById(R.id.chartSpinner);
@@ -246,6 +243,7 @@ public class ExerciseFeedbackActivity extends Activity implements AdapterView.On
             // modify y-axis
             chart.getAxisRight().setEnabled(false);
             YAxis yAxis = chart.getAxisLeft();
+            yAxis.label
 
             // add data set to line chart
             candleData = new CandleData(dataSet);
@@ -280,7 +278,6 @@ public class ExerciseFeedbackActivity extends Activity implements AdapterView.On
     public void onItemSelected(AdapterView<?> parent, View view, int pos, long l) {
         // An item was selected. You can retrieve the selected item using
         chartName = parent.getItemAtPosition(pos).toString();
-        chartTitle.setText(chartName);
         if (getIntent().hasExtra("Session")) {
             session = (Session) getIntent().getSerializableExtra("Session");
             setChartData(pos, session);
